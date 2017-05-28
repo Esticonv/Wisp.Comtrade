@@ -1,2 +1,2 @@
 # Wisp.Comtrade
-Test line
+COMTRADE parsing library for Net4.5
