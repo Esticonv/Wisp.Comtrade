@@ -16,6 +16,30 @@ namespace Wisp.Comtrade
 	internal class DataFileSampleTest
 	{
 		[Test]
+		public void ASCIITest()
+		{
+			const string str="5 ,667 , -760, 1274,72,, 3.4028235e38,-3.4028235e38,0 ,0,0 ,0,1,1";
+			var sample=new DataFileSample(str,6,6);
+			
+			Assert.That(sample.number,Is.EqualTo(5));
+			Assert.That(sample.timestamp, Is.EqualTo(667));
+			Assert.That(sample.analogs.Length,Is.EqualTo(6));
+			Assert.That(sample.analogs[0],Is.EqualTo(-760));
+			Assert.That(sample.analogs[1],Is.EqualTo(1274));
+			Assert.That(sample.analogs[2],Is.EqualTo(72));
+			Assert.That(sample.analogs[3],Is.EqualTo(0));
+			Assert.That(sample.analogs[4],Is.EqualTo(3.4028235e38));
+			Assert.That(sample.analogs[5],Is.EqualTo(-3.4028235e38));
+			Assert.That(sample.digitals.Length,Is.EqualTo(6));
+			Assert.That(sample.digitals[0],Is.EqualTo(false));
+			Assert.That(sample.digitals[1],Is.EqualTo(false));
+			Assert.That(sample.digitals[2],Is.EqualTo(false));
+			Assert.That(sample.digitals[3],Is.EqualTo(false));
+			Assert.That(sample.digitals[4],Is.EqualTo(true));
+			Assert.That(sample.digitals[5],Is.EqualTo(true));
+		}
+		
+		[Test]
 		public void CommonBinaryTest()
 		{
 			byte[] bytes={

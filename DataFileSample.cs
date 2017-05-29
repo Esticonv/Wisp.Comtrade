@@ -25,8 +25,24 @@ namespace Wisp.Comtrade
 		
 		public DataFileSample(string asciiLine, int analogCount, int digitalCount)
 		{
-			//TODO доделать
-			throw new NotImplementedException();
+			asciiLine=asciiLine.Replace(GlobalSettings.whiteSpace.ToString(),string.Empty);
+			var strings=asciiLine.Split(GlobalSettings.commaDelimiter);
+						
+			this.analogs=new double[analogCount];
+			this.digitals=new bool[digitalCount];				
+						
+			this.number=Convert.ToInt32(strings[0]);
+			this.timestamp=Convert.ToInt32(strings[1]);
+			
+			for(int i=0;i<analogCount;i++){
+				if(strings[i+2]!=string.Empty){//by Standart, can be missing value. In that case by default=0
+					this.analogs[i]=Convert.ToDouble(strings[i+2],System.Globalization.CultureInfo.InvariantCulture);
+				}
+			}
+			
+			for(int i=0;i<digitalCount;i++){
+				this.digitals[i]=Convert.ToBoolean(Convert.ToInt32(strings[i+2+analogCount]));
+			}
 		}
 		
 		public DataFileSample(byte[] bytes, DataFileType dataFileType, int analogCount, int digitalCount)

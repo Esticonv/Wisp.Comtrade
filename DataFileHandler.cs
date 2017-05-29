@@ -7,6 +7,7 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
+using System.Linq;
 
 namespace Wisp.Comtrade
 {
@@ -37,8 +38,7 @@ namespace Wisp.Comtrade
 			   configuration.dataFileType==DataFileType.Float32){
 				var fileContent=System.IO.File.ReadAllBytes(fullPathToFileDAT);
 				
-				//количество байтов(по 8 битов)
-				//const int sampleNumberLength=4;				
+				//count of bytes (with 8 bit each)				
 				int analogOneChannelLength=configuration.dataFileType == DataFileType.Binary ? 2 : 4;
 				
 				int oneSampleLength=	DataFileHandler.sampleNumberLength+
@@ -58,8 +58,9 @@ namespace Wisp.Comtrade
 				
 			}
 			else if(configuration.dataFileType==DataFileType.ASCII){
-				var strings=System.IO.File.ReadAllLines(fullPathToFileDAT);//TODO Сделать проверку на лишние символы перевода каретки (удалить пустые строки)
-				for(int i=0;i<samplesCount;i++){					
+				var strings=System.IO.File.ReadAllLines(fullPathToFileDAT);
+				strings=strings.Where(x => x != string.Empty).ToArray();//removing empty strings (when *.dat file not following Standart)
+				for(int i=0;i<samplesCount;i++){
 					this.samples[i]=new DataFileSample(strings[i],
 					                                   configuration.analogChannelsCount, configuration.digitalChannelsCount);
 				}
