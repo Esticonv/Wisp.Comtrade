@@ -42,9 +42,20 @@ namespace Wisp.Comtrade
 		{			
 			string path=System.IO.Path.GetDirectoryName(fullPathToFile);
 			string filenameWithoutExtention=System.IO.Path.GetFileNameWithoutExtension(fullPathToFile);
+			string extention=System.IO.Path.GetExtension(fullPathToFile);
 			
-			this.Configuration=new ConfigurationHandler(System.IO.Path.Combine(path,filenameWithoutExtention+".cfg"));
-			this.data=new DataFileHandler(System.IO.Path.Combine(path,filenameWithoutExtention+".dat"),this.Configuration);
+			if(extention==GlobalSettings.extentionCFF){
+				//TODO доделать cff
+				throw new NotImplementedException("*.cff not supported");
+			}
+			else if(extention==GlobalSettings.extentionCFG || extention==GlobalSettings.extentionDAT){
+				this.Configuration=new ConfigurationHandler(System.IO.Path.Combine(path,filenameWithoutExtention+".cfg"));
+				this.data=new DataFileHandler(System.IO.Path.Combine(path,filenameWithoutExtention+".dat"),this.Configuration);
+			}
+			else{
+				throw new InvalidOperationException("Unsupported file extentions. Must be *.cfg, *.dat, *.cff");
+			}
+			
 		}
 		
 		/// <summary>

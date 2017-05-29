@@ -29,23 +29,29 @@ namespace Wisp.Comtrade
 		
 		//second line
 		internal int analogChannelsCount=0;
-		internal int digitalChannelsCount=0;
+		internal int digitalChannelsCount=0;	
 		
+		
+		List<AnalogChannelInformation> analogChannelInformations;		
 		/// <summary>
 		/// List of analog channel informations
 		/// </summary>
-		public List<AnalogChannelInformation> AnalogChannelInformations
+		public IReadOnlyList<AnalogChannelInformation> AnalogChannelInformations
 		{
-			get;
-			private set;
+			get{
+				return this.analogChannelInformations;
+			}
 		}
+				
+		List<DigitalChannelInformation> digitalChannelInformations;
 		/// <summary>
 		/// List of digital channel informations
 		/// </summary>
-		public List<DigitalChannelInformation> DigitalChannelInformations
+		public IReadOnlyList<DigitalChannelInformation> DigitalChannelInformations
 		{
-			get;
-			private set;
+			get{
+				return this.digitalChannelInformations;
+			}
 		}
 		/// <summary>
 		/// According STD for COMTRADE
@@ -74,14 +80,14 @@ namespace Wisp.Comtrade
 			this.ParseFirstLine(strings[0]);
 			this.ParseSecondLine(strings[1]);
 			
-			this.AnalogChannelInformations=new List<AnalogChannelInformation>();
+			this.analogChannelInformations=new List<AnalogChannelInformation>();
 			for(int i=0;i<this.analogChannelsCount;i++){
-				this.AnalogChannelInformations.Add(new AnalogChannelInformation(strings[2+i]));
+				this.analogChannelInformations.Add(new AnalogChannelInformation(strings[2+i]));
 			}
 			
-			this.DigitalChannelInformations=new List<DigitalChannelInformation>();
+			this.digitalChannelInformations=new List<DigitalChannelInformation>();
 			for(int i=0;i<this.digitalChannelsCount;i++){
-				this.DigitalChannelInformations.Add(new DigitalChannelInformation(strings[2+i+this.analogChannelsCount]));
+				this.digitalChannelInformations.Add(new DigitalChannelInformation(strings[2+i+this.analogChannelsCount]));
 			}
 			
 			var strIndex=2+this.analogChannelsCount+this.digitalChannelsCount;
