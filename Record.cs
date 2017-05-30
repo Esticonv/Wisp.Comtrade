@@ -102,7 +102,7 @@ namespace Wisp.Comtrade
 			}
 			
 			var list=new double[this.data.samples.Length];
-			for(int i=0;i<this.dataS.samples.Length;i++){				
+			for(int i=0;i<this.data.samples.Length;i++){				
 				list[i]=(this.data.samples[i].analogs[channelNumber]*this.Configuration.AnalogChannelInformations[channelNumber].a+
 				         this.Configuration.AnalogChannelInformations[channelNumber].b)*Kt;
 			}
