@@ -2,19 +2,18 @@
 <package >
   <metadata>
     <id>Wisp.Comtrade</id>
-    <version>0.9.1</version>
+    <version>0.9.1.1</version>
     <title>COMTRADE parsing library</title>
     <authors>Esti</authors>
     <owners>Esti</owners>
     <projectUrl>https://github.com/Esticonv/Wisp.Comtrade</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>COMTRADE parsing library</description>
-    <releaseNotes>Add support ASCII data files</releaseNotes>
+    <releaseNotes>Fixed some critical bugs. Added unit tests</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>COMTRADE</tags>
   </metadata>
 	<files>
-	    <file src="bin\Release\Wisp.Comtrade.dll" target="lib\net45\Wisp.Comtrade.dll" />
-	    <file src="bin\Release\Wisp.Comtrade.xml" target="lib\net45\Wisp.Comtrade.xml" />
+	   
 	</files>
 </package>

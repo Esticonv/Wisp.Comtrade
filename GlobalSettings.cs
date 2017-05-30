@@ -21,8 +21,8 @@ namespace Wisp.Comtrade
 		/// Extentions of COMTRADE files
 		/// </summary>
 		public const string extentionsForFileDialogFilter="(*.cfg;*.dat;*.cff)|*.cfg;*.dat;*.cff";
-		internal const string extentionCFG="cfg";
-		internal const string extentionDAT="dat";
-		internal const string extentionCFF="cff";
+		internal const string extentionCFG=".cfg";
+		internal const string extentionDAT=".dat";
+		internal const string extentionCFF=".cff";
 	}
 }

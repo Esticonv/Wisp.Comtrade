@@ -44,8 +44,10 @@ namespace Wisp.Comtrade
 			this.name=values[1].Trim(GlobalSettings.whiteSpace);
 			this.phase=values[2].Trim(GlobalSettings.whiteSpace);
 			this.circuitComponent=values[3].Trim(GlobalSettings.whiteSpace);
-			this.normalState=Convert.ToBoolean(Convert.ToInt32(values[4].Trim(GlobalSettings.whiteSpace),
-			                                                   System.Globalization.CultureInfo.InvariantCulture));
+			if(values.Length>4){//some files not include this part of line
+				this.normalState=Convert.ToBoolean(Convert.ToInt32(values[4].Trim(GlobalSettings.whiteSpace),
+				                                                   System.Globalization.CultureInfo.InvariantCulture));
+			}
 		}
 	}
 }

@@ -42,7 +42,7 @@ namespace Wisp.Comtrade
 		{			
 			string path=System.IO.Path.GetDirectoryName(fullPathToFile);
 			string filenameWithoutExtention=System.IO.Path.GetFileNameWithoutExtension(fullPathToFile);
-			string extention=System.IO.Path.GetExtension(fullPathToFile);
+			string extention=System.IO.Path.GetExtension(fullPathToFile).ToLower();
 			
 			if(extention==GlobalSettings.extentionCFF){
 				//TODO доделать cff
@@ -76,12 +76,14 @@ namespace Wisp.Comtrade
 			else{//use calculated by samplingFrequency
 				double currentTime=0;
 				int sampleRateIndex=0;
+				const double secondToMicrosecond=1000000;
 				for(int i=0;i<this.data.samples.Length;i++){
 					list[i]=currentTime;
-					if(this.Configuration.sampleRates[sampleRateIndex].lastSampleNumber>=i){
+					if(i>=this.Configuration.sampleRates[sampleRateIndex].lastSampleNumber){
 						sampleRateIndex++;
-					}					
-					currentTime+=0.000001/this.Configuration.sampleRates[sampleRateIndex].samplingFrequency;					
+					}				
+					
+					currentTime+=secondToMicrosecond/this.Configuration.sampleRates[sampleRateIndex].samplingFrequency;					
 				} 
 			}
 			
@@ -100,7 +102,7 @@ namespace Wisp.Comtrade
 			}
 			
 			var list=new double[this.data.samples.Length];
-			for(int i=0;i<this.data.samples.Length;i++){				
+			for(int i=0;i<this.dataS.samples.Length;i++){				
 				list[i]=(this.data.samples[i].analogs[channelNumber]*this.Configuration.AnalogChannelInformations[channelNumber].a+
 				         this.Configuration.AnalogChannelInformations[channelNumber].b)*Kt;
 			}

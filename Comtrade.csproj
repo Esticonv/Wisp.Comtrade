@@ -87,6 +87,9 @@
     </Compile>
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecordTest.cs">
+      <DependentUpon>Record.cs</DependentUpon>
+    </Compile>
     <Compile Include="SampleRate.cs" />
     <Compile Include="SampleRateTest.cs">
       <DependentUpon>SampleRate.cs</DependentUpon>

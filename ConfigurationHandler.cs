@@ -103,7 +103,7 @@ namespace Wisp.Comtrade
 				//strIndex++;
 			}
 			else{
-				for(int i=0;i<=this.samplingRateCount;i++){
+				for(int i=0;i<this.samplingRateCount;i++){
 					this.sampleRates.Add(new SampleRate(strings[strIndex+i]));
 				}
 				strIndex+=this.samplingRateCount;
