@@ -50,7 +50,7 @@ namespace Wisp.Comtrade
 			if(text=="ascii")return DataFileType.ASCII;
 			if(text=="binary")return DataFileType.Binary;
 			if(text=="binary32")return DataFileType.Binary32;
-			if(text=="Float32")return DataFileType.Float32;
+			if(text=="float32")return DataFileType.Float32;
 			throw new InvalidOperationException("Undefined *.dat file format");
 		}
 	}

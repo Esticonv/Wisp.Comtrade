@@ -14,11 +14,21 @@ namespace Wisp.Comtrade
 	/// Description of AnalogChannelInformation.
 	/// </summary>
 	public class AnalogChannelInformation
-	{
+	{		
+		int index=0;
+		
 		/// <summary>
 		/// According STD for COMTRADE
 		/// </summary>
-		readonly public int index=0;
+		public int Index{
+			get{
+				return index;
+			}
+			internal set{
+				this.index=value;
+			}
+		}		
+		
 		/// <summary>
 		/// According STD for COMTRADE
 		/// </summary>
@@ -35,18 +45,13 @@ namespace Wisp.Comtrade
 		/// According STD for COMTRADE
 		/// </summary>
 		readonly public string units=string.Empty;
-		/// <summary>
-		/// According STD for COMTRADE
-		/// </summary>
-		readonly public double a=1.0;
-		/// <summary>
-		/// According STD for COMTRADE
-		/// </summary>
-		readonly public double b=0;
-		/// <summary>
-		/// According STD for COMTRADE
-		/// </summary>
-		readonly public double skew=0;
+		
+		internal double a=1.0;
+				
+		internal double b=0;
+		
+		readonly internal double skew=0;
+		
 		/// <summary>
 		/// According STD for COMTRADE
 		/// </summary>
@@ -63,10 +68,17 @@ namespace Wisp.Comtrade
 		/// According STD for COMTRADE
 		/// </summary>
 		readonly public double secondary=1.0;
+		
+		readonly internal bool isPrimary=true;	
+		
 		/// <summary>
-		/// According STD for COMTRADE
+		/// Constructor
 		/// </summary>
-		readonly public bool isPrimary=true;	
+		public AnalogChannelInformation(string name, string phase)
+		{
+			this.name=name;
+			this.phase=phase;
+		}
 		
 		internal AnalogChannelInformation(string analogLine)
 		{
@@ -90,6 +102,23 @@ namespace Wisp.Comtrade
 				this.isPrimary=false;
 			}
 						
+		}
+		
+		internal string ToCFGString()
+		{
+			return this.Index.ToString()+GlobalSettings.commaDelimiter+
+					this.name+GlobalSettings.commaDelimiter+
+					this.phase+GlobalSettings.commaDelimiter+
+					this.circuitComponent+GlobalSettings.commaDelimiter+
+					this.units+GlobalSettings.commaDelimiter+
+					this.a.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
+					this.b.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
+					this.skew.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
+					"-3.4028235E38"+GlobalSettings.commaDelimiter+//constant from STD (equal float max/min value)
+					"3.4028235E38"+GlobalSettings.commaDelimiter+
+					this.primary.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
+					this.secondary.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
+					(this.isPrimary ? "P" : "S");
 		}
 	}
 }

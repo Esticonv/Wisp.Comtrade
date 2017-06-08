@@ -77,6 +77,9 @@
       <DependentUpon>ConfigurationHandler.cs</DependentUpon>
     </Compile>
     <Compile Include="DataFileHandler.cs" />
+    <Compile Include="DataFileHandlerTest.cs">
+      <DependentUpon>DataFileHandler.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataFileSample.cs" />
     <Compile Include="DataFileSampleTest.cs">
       <DependentUpon>DataFileSample.cs</DependentUpon>
@@ -87,14 +90,18 @@
     </Compile>
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecordTest.cs">
-      <DependentUpon>Record.cs</DependentUpon>
+    <Compile Include="RecordReaderTest.cs">
+      <DependentUpon>RecordReader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RecordWriter.cs" />
+    <Compile Include="RecordWriterTest.cs">
+      <DependentUpon>RecordWriter.cs</DependentUpon>
     </Compile>
     <Compile Include="SampleRate.cs" />
     <Compile Include="SampleRateTest.cs">
       <DependentUpon>SampleRate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Record.cs" />
+    <Compile Include="RecordReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comtrade.nuspec" />

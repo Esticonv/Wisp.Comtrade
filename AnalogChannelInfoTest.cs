@@ -22,7 +22,7 @@ namespace Wisp.Comtrade
 			const string str=@"  8,F8-VN               ,N,,V     ,     0.012207,0,0,-32767,32767, 330000.0,100.0,S";			
 			var channelInfo=new AnalogChannelInformation(str);
 			
-			Assert.That(channelInfo.index, Is.EqualTo(8));
+			Assert.That(channelInfo.Index, Is.EqualTo(8));
 			Assert.That(channelInfo.name,Is.EqualTo("F8-VN"));
 			Assert.That(channelInfo.phase,Is.EqualTo("N"));
 			Assert.That(channelInfo.circuitComponent,Is.EqualTo(""));

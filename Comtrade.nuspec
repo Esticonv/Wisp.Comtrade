@@ -8,7 +8,7 @@
     <owners>Esti</owners>
     <projectUrl>https://github.com/Esticonv/Wisp.Comtrade</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>COMTRADE parsing library</description>
+    <description>COMTRADE parsing library (Net4.5)</description>
     <releaseNotes>Fixed some critical bugs. Added unit tests</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>COMTRADE</tags>

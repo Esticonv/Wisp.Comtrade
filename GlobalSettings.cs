@@ -17,6 +17,7 @@ namespace Wisp.Comtrade
 	{
 		internal const char commaDelimiter=',';
 		internal const char whiteSpace=' ';
+		internal const string newLine="\r\n";
 		/// <summary>
 		/// Extentions of COMTRADE files
 		/// </summary>

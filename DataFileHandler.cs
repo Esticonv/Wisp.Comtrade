@@ -28,6 +28,15 @@ namespace Wisp.Comtrade
 				(digitalChannelsCount/16+((digitalChannelsCount%16) == 0 ? 0:1))*DataFileHandler.digital16ChannelLength;
 		}
 		
+		internal static int GetByteCount(int analogsChannelsCount, int digitalChannelsCount, DataFileType dataFileType)
+		{
+			int analogOneChannelLength = dataFileType == DataFileType.Binary ? 2 : 4;
+			return  DataFileHandler.sampleNumberLength+
+					DataFileHandler.timeStampLength+
+					analogsChannelsCount*analogOneChannelLength+
+				    DataFileHandler.GetDigitalByteCount(digitalChannelsCount);
+		} 
+		
 		internal DataFileHandler(string fullPathToFileDAT, ConfigurationHandler configuration)
 		{
 			int samplesCount=configuration.sampleRates[configuration.sampleRates.Count-1].lastSampleNumber;	
@@ -37,15 +46,10 @@ namespace Wisp.Comtrade
 			   configuration.dataFileType==DataFileType.Binary32 ||
 			   configuration.dataFileType==DataFileType.Float32){
 				var fileContent=System.IO.File.ReadAllBytes(fullPathToFileDAT);
-				
-				//count of bytes (with 8 bit each)				
-				int analogOneChannelLength=configuration.dataFileType == DataFileType.Binary ? 2 : 4;
-				
-				int oneSampleLength=	DataFileHandler.sampleNumberLength+
-										DataFileHandler.timeStampLength+
-										configuration.analogChannelsCount*analogOneChannelLength+
-										DataFileHandler.GetDigitalByteCount(configuration.digitalChannelsCount);					
-				
+		
+				int oneSampleLength=DataFileHandler.GetByteCount(configuration.analogChannelsCount,
+				                                                 configuration.digitalChannelsCount,
+				                                                 configuration.dataFileType);				
 				
 				for(int i=0;i<samplesCount;i++){
 					var bytes=new byte[oneSampleLength];

@@ -15,10 +15,22 @@ namespace Wisp.Comtrade
 	/// </summary>
 	public class DigitalChannelInformation
 	{
+		
+		int index=0;
+		
 		/// <summary>
 		/// According STD for COMTRADE
 		/// </summary>
-		readonly public int index=0;
+		public int Index
+		{
+			get{
+				return index;
+			}
+			internal set{
+				index=value;
+			}
+		}		
+		
 		/// <summary>
 		/// According STD for COMTRADE
 		/// </summary>
@@ -36,6 +48,15 @@ namespace Wisp.Comtrade
 		/// </summary>
 		readonly public bool normalState=false;
 		
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public DigitalChannelInformation(string name, string phase)
+		{
+			this.name=name;
+			this.phase=phase;
+		}
+		
 		internal DigitalChannelInformation(string digitalLine)
 		{
 			var values=digitalLine.Split(GlobalSettings.commaDelimiter);
@@ -48,6 +69,15 @@ namespace Wisp.Comtrade
 				this.normalState=Convert.ToBoolean(Convert.ToInt32(values[4].Trim(GlobalSettings.whiteSpace),
 				                                                   System.Globalization.CultureInfo.InvariantCulture));
 			}
+		}
+		
+		internal string ToCFGString()
+		{
+			return this.Index.ToString()+GlobalSettings.commaDelimiter+
+					this.name+GlobalSettings.commaDelimiter+
+					this.phase+GlobalSettings.commaDelimiter+
+					this.circuitComponent+GlobalSettings.commaDelimiter+
+					(this.normalState ? "0" : "1");
 		}
 	}
 }
