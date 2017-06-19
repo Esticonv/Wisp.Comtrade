@@ -88,12 +88,13 @@ namespace Wisp.Comtrade
 		/// <summary>
 		/// 
 		/// </summary>
-		public void SaveToFile(string fullPathToFile)
-		{
+		public void SaveToFile(string fullPathToFile, DataFileType dataFileType=DataFileType.Binary)
+		{			
+			
 			string path=System.IO.Path.GetDirectoryName(fullPathToFile);
 			string filenameWithoutExtention=System.IO.Path.GetFileNameWithoutExtension(fullPathToFile);
 			
-			this.CalculateScaleFactorAB(DataFileType.Binary);
+			this.CalculateScaleFactorAB(dataFileType);
 			
 			//CFG part
 			var strings=new List<string>();
@@ -127,35 +128,61 @@ namespace Wisp.Comtrade
 			strings.Add("01/01/2017"+GlobalSettings.commaDelimiter+
 			            "00:00:00.000001");
 			
-			strings.Add("binary");
+			
+			switch (dataFileType) {
+				case DataFileType.ASCII:    strings.Add("ASCII"); break;
+				case DataFileType.Binary:   strings.Add("BINARY");  break;
+				case DataFileType.Binary32: strings.Add("BINARY32");  break; 
+				case DataFileType.Float32:  strings.Add("FLOAT32");  break;
+				default:
+					throw new InvalidOperationException("Undefined data file type ="+dataFileType.ToString());					
+			}			
 			
 			strings.Add("1.0");
 			
 			System.IO.File.WriteAllLines(System.IO.Path.Combine(path,filenameWithoutExtention)+GlobalSettings.extentionCFG, strings);
 			
 			//DAT part
-			var bytes=new List<byte>();
+			string dataFileFullPath=System.IO.Path.Combine(path,filenameWithoutExtention)+GlobalSettings.extentionDAT;
 			
-			foreach(var sample in this.samples){
-				bytes.AddRange(sample.ToByteDAT(DataFileType.Binary,this.analogChannelInformations));
+			if(dataFileType==DataFileType.ASCII){
+				strings=new List<string>();
+				foreach(var sample in this.samples){
+					strings.Add(sample.ToASCIIDAT());
+				}				
+				System.IO.File.WriteAllLines(dataFileFullPath, strings);
 			}
-			
-			System.IO.File.WriteAllBytes(System.IO.Path.Combine(path,filenameWithoutExtention)+GlobalSettings.extentionDAT, bytes.ToArray());
+			else{
+				var bytes=new List<byte>();				
+				foreach(var sample in this.samples){
+					bytes.AddRange(sample.ToByteDAT(dataFileType,this.analogChannelInformations));
+				}				
+				System.IO.File.WriteAllBytes(dataFileFullPath, bytes.ToArray());
+			}
 		}
 		
 		void CalculateScaleFactorAB(DataFileType dataFileType)
 		{
 			if(dataFileType==DataFileType.Binary ||
-			   dataFileType==DataFileType.Binary32){			
+			   dataFileType==DataFileType.Binary32){//i make it same, but in theory, bin32 can be more precise			
 				for(int i=0;i<this.analogChannelInformations.Count;i++){
 					double min=this.samples.Min(x => x.analogs[i]);
 					double max=this.samples.Max(x => x.analogs[i]);					
 					this.analogChannelInformations[i].b=(max+min)/2.0;
 					if(max!=min){
-						this.analogChannelInformations[i].a=(max-min)/32767;//65536
-					}
-				}
+						this.analogChannelInformations[i].a=(max-min)/32768.0;//65536
+					}					
+					this.analogChannelInformations[i].Min=-32767;//by standart 1999
+					this.analogChannelInformations[i].Max=32767;//by standart 1999					
+				}				
 			}
+			
+			if(dataFileType==DataFileType.ASCII){
+				foreach(var analogChannelInformation in this.analogChannelInformations){
+					analogChannelInformation.Min=-32767;//by standart 1999
+					analogChannelInformation.Min=32767;//by standart 1999
+				}
+			}			
 		}
 		
 	}

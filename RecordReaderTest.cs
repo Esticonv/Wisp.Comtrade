@@ -42,6 +42,11 @@ namespace Wisp.Comtrade
 			record=new RecordReader(@"D:\YandexDisk\Oscillogram\Sepam_StopingGenerator_B\1.DAT");
 			record.GetTimeLine();
 			record.GetAnalogPrimaryChannel(0);
+			record.GetDigitalChannel(0);	
+
+			record=new RecordReader(@"D:\YandexDisk\Oscillogram\Undefined_2013_B32\000.DAT");
+			record.GetTimeLine();
+			record.GetAnalogPrimaryChannel(0);
 			record.GetDigitalChannel(0);			
 		}
 		

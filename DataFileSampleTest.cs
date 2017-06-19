@@ -8,6 +8,7 @@
  */
 #if TEST
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Wisp.Comtrade
@@ -16,7 +17,7 @@ namespace Wisp.Comtrade
 	internal class DataFileSampleTest
 	{
 		[Test]
-		public void ASCIITest()
+		public void ASCIIReadingTest()
 		{
 			const string str="5 ,667 , -760, 1274,72,, 3.4028235e38,-3.4028235e38,0 ,0,0 ,0,1,1";
 			var sample=new DataFileSample(str,6,6);
@@ -40,7 +41,7 @@ namespace Wisp.Comtrade
 		}
 		
 		[Test]
-		public void CommonBinaryTest()
+		public void CommonBinaryReadingTest()
 		{
 			byte[] bytes={
 				0x05,0x00,0x50,0x00,
@@ -75,7 +76,41 @@ namespace Wisp.Comtrade
 		}
 		
 		[Test]
-		public void DigitalBinaryTest()
+		public void CommonBinaryWritingTest()
+		{
+			byte[] bytes={
+				0x05,0x00,0x50,0x00,
+				0x9B,0x02,0x00,0x00,
+				0x08,0xFD,
+				0xFA,0x04,
+				0x48,0x00,
+				0x3D,0x00,
+				0x74,0xFF,
+				0x0A,0xFE,
+				0x30,0x00
+				
+			};
+			
+			var sample=new DataFileSample("5242885,667,-760,1274,72,61,-140,-502,0,0,0,0,1,1",6,6);
+			
+			var analogInformations=new List<AnalogChannelInformation>();
+			analogInformations.Add(new AnalogChannelInformation(string.Empty,string.Empty));
+			analogInformations.Add(new AnalogChannelInformation(string.Empty,string.Empty));
+			analogInformations.Add(new AnalogChannelInformation(string.Empty,string.Empty));
+			analogInformations.Add(new AnalogChannelInformation(string.Empty,string.Empty));
+			analogInformations.Add(new AnalogChannelInformation(string.Empty,string.Empty));
+			analogInformations.Add(new AnalogChannelInformation(string.Empty,string.Empty));
+			
+			var result=sample.ToByteDAT(DataFileType.Binary,analogInformations);
+			
+			for(int i=0;i<bytes.Length;i++){
+				Assert.That(result[i],Is.EqualTo(bytes[i]));
+			}
+						
+		}
+		
+		[Test]
+		public void DigitalOnlyBinaryReadingTest()
 		{
 			byte[] bytes={
 				0x05,0x00,0x00,0x00,

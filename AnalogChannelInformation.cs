@@ -44,7 +44,7 @@ namespace Wisp.Comtrade
 		/// <summary>
 		/// According STD for COMTRADE
 		/// </summary>
-		readonly public string units=string.Empty;
+		readonly public string units="NONE";
 		
 		internal double a=1.0;
 				
@@ -52,14 +52,36 @@ namespace Wisp.Comtrade
 		
 		readonly internal double skew=0;
 		
+		
+		double min=float.MinValue;
+		
 		/// <summary>
 		/// According STD for COMTRADE
 		/// </summary>
-		readonly public double min=double.NegativeInfinity;
+		public double Min
+		{
+			get{
+				return this.min;
+			}
+			internal set{
+				this.min=value;
+			}			
+		}		
+		
+		double max=float.MaxValue;
 		/// <summary>
 		/// According STD for COMTRADE
 		/// </summary>
-		readonly public double max=double.PositiveInfinity;
+		public double Max
+		{
+			get{
+				return this.max;
+			}
+			internal set{
+				this.max=value;
+			}			
+		}
+		
 		/// <summary>
 		/// According STD for COMTRADE
 		/// </summary>
@@ -114,8 +136,8 @@ namespace Wisp.Comtrade
 					this.a.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
 					this.b.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
 					this.skew.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
-					"-3.4028235E38"+GlobalSettings.commaDelimiter+//constant from STD (equal float max/min value)
-					"3.4028235E38"+GlobalSettings.commaDelimiter+
+					this.min.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
+					this.max.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
 					this.primary.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
 					this.secondary.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
 					(this.isPrimary ? "P" : "S");

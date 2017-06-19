@@ -91,6 +91,24 @@ namespace Wisp.Comtrade
 			}			
 		}
 		
+		public string ToASCIIDAT()
+		{
+			string result=string.Empty;
+			result+=this.number.ToString();
+			result+=GlobalSettings.commaDelimiter+
+				this.timestamp.ToString();
+			foreach(var analog in this.analogs){
+				result+=GlobalSettings.commaDelimiter+
+					analog.ToString(System.Globalization.CultureInfo.InvariantCulture);
+			}
+			foreach(var digital in this.digitals){
+				result+=GlobalSettings.commaDelimiter+
+					System.Convert.ToInt32(digital).ToString(System.Globalization.CultureInfo.InvariantCulture);
+			}			
+			
+			return result;
+		}
+		
 		
 		public byte[] ToByteDAT(DataFileType dataFileType, IReadOnlyList<AnalogChannelInformation> analogInformations)
 		{
@@ -104,6 +122,9 @@ namespace Wisp.Comtrade
 			switch (dataFileType) {
 				case DataFileType.Binary:
 					this.AnalogsToBinaryDAT(result, analogInformations);
+					break;
+				case DataFileType.Binary32:
+					this.AnalogsToBinary32DAT(result, analogInformations);
 					break;
 				case DataFileType.Float32:
 					this.AnalogsToFloat32DAT(result);
@@ -122,6 +143,14 @@ namespace Wisp.Comtrade
 				short s=(short)((this.analogs[i]-analogInformations[i].b)/analogInformations[i].a);
 				System.BitConverter.GetBytes(s).CopyTo(result,8+i*2);
 			}			
+		}	
+
+		void AnalogsToBinary32DAT(byte[] result, IReadOnlyList<AnalogChannelInformation> analogInformations)
+		{			
+			for(int i=0;i<this.analogs.Length;i++){
+				int s=(int)((this.analogs[i]-analogInformations[i].b)/analogInformations[i].a);
+				System.BitConverter.GetBytes(s).CopyTo(result,8+i*4);
+			}			
 		}		
 		
 		void AnalogsToFloat32DAT(byte[] result)
@@ -133,13 +162,16 @@ namespace Wisp.Comtrade
 		
 		void DigitalsToDAT(byte[] result, int digitalByteStart)
 		{
-			int digitalByteCount=DataFileHandler.GetDigitalByteCount(this.digitals.Length);
-			for(int i=0;i<digitalByteCount;i++){
-				byte s=0;
-				for(int j=0;j<8;j++){
-					s=(byte)(System.Convert.ToInt32(s)|(System.Convert.ToInt32(this.digitals[i/8+j])<<j));
+			int byteIndex=0;
+			byte s=0;
+			for(int i=0;i<this.digitals.Length;i++){				
+				s=(byte)(System.Convert.ToInt32(s)|(System.Convert.ToInt32(this.digitals[i])<<(i-byteIndex*8)));
+				
+				if((i+1)%8==0 || (i+1)==this.digitals.Length){
+					result[digitalByteStart+byteIndex]=s;
+					s=0;
+					byteIndex++;					
 				}
-				result[digitalByteStart+i]=s;
 			}
 		}
 	}

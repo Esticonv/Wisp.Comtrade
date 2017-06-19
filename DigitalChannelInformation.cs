@@ -77,7 +77,7 @@ namespace Wisp.Comtrade
 					this.name+GlobalSettings.commaDelimiter+
 					this.phase+GlobalSettings.commaDelimiter+
 					this.circuitComponent+GlobalSettings.commaDelimiter+
-					(this.normalState ? "0" : "1");
+					(this.normalState ? "1" : "0");
 		}
 	}
 }

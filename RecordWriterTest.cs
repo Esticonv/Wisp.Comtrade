@@ -16,10 +16,8 @@ namespace Wisp.Comtrade
 	[TestFixture]
 	internal class RecordWriterTest
 	{
-		[Test]
-		public void SaveToFileTest()
+		RecordWriter GetWriterToTest()
 		{
-			const string fullPath=@"D:\YandexDisk\Oscillogram\AutoCreated\1.cfg";
 			var writer=new RecordWriter();
 			writer.AddAnalogChannel(new AnalogChannelInformation("channel1a","A"));
 			writer.AddAnalogChannel(new AnalogChannelInformation("channel2a","B"));
@@ -65,10 +63,22 @@ namespace Wisp.Comtrade
 			                    false,true,false,true,
 			                    true,false,true,false,
 			                    true});
-			writer.SaveToFile(fullPath);
 			
+			writer.AddSample(1500,
+			                 new double[]{5.0,5.0,5.0},
+			                 new bool[]{
+			                 	false,false,false,false,
+			                 	true,true,true,true,
+			                    false,true,false,true,
+			                    true,false,true,false,
+			                    true});
 			
-			var reader=new RecordReader(fullPath);
+			return writer;
+		}
+		
+		void ReaderAsserts(string fullpath)
+		{
+			var reader=new RecordReader(fullpath);
 			Assert.That(reader.Configuration.AnalogChannelInformations.Count,Is.EqualTo(3));
 			Assert.That(reader.Configuration.DigitalChannelInformations.Count,Is.EqualTo(17));
 			
@@ -80,6 +90,7 @@ namespace Wisp.Comtrade
 			var digitals5=reader.GetDigitalChannel(4);
 			var digitals17=reader.GetDigitalChannel(16);
 			
+						
 			Assert.That(timeLine[0],Is.EqualTo(0).Within(0.01));
 			Assert.That(timeLine[1],Is.EqualTo(500).Within(0.01));
 			Assert.That(timeLine[2],Is.EqualTo(1000).Within(0.01));
@@ -107,6 +118,27 @@ namespace Wisp.Comtrade
 			Assert.That(digitals17[0],Is.EqualTo(true));
 			Assert.That(digitals17[1],Is.EqualTo(false));
 			Assert.That(digitals17[2],Is.EqualTo(true));
+		}
+		
+		[Test]
+		public void SaveToFileBinaryTest()
+		{
+			const string fullPath=@"D:\YandexDisk\Oscillogram\AutoCreated\bin.cfg";
+			var writer=this.GetWriterToTest();
+			writer.SaveToFile(fullPath,DataFileType.Binary);			
+			
+			this.ReaderAsserts(fullPath);
+			
+		}
+		
+		[Test]
+		public void SaveToFileAsciiTest()
+		{
+			const string fullPath=@"D:\YandexDisk\Oscillogram\AutoCreated\ascii.cfg";
+			var writer=this.GetWriterToTest();
+			writer.SaveToFile(fullPath,DataFileType.ASCII);			
+			
+			this.ReaderAsserts(fullPath);			
 		}
 	}
 }
