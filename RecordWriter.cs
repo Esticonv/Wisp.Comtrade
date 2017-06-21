@@ -86,10 +86,16 @@ namespace Wisp.Comtrade
 		}
 		
 		/// <summary>
-		/// 
+		/// Support only Ascii or Binary file type
 		/// </summary>
 		public void SaveToFile(string fullPathToFile, DataFileType dataFileType=DataFileType.Binary)
-		{			
+		{	
+			if(dataFileType==DataFileType.Undefined ||
+			   dataFileType==DataFileType.Binary32 ||
+			   dataFileType==DataFileType.Float32){
+				throw new InvalidOperationException("Currently unsupported "+dataFileType.ToString());
+			}
+			
 			
 			string path=System.IO.Path.GetDirectoryName(fullPathToFile);
 			string filenameWithoutExtention=System.IO.Path.GetFileNameWithoutExtension(fullPathToFile);
@@ -170,7 +176,7 @@ namespace Wisp.Comtrade
 					double max=this.samples.Max(x => x.analogs[i]);					
 					this.analogChannelInformations[i].b=(max+min)/2.0;
 					if(max!=min){
-						this.analogChannelInformations[i].a=(max-min)/32768.0;//65536
+						this.analogChannelInformations[i].a=(max-min)/32767.0;//65536						
 					}					
 					this.analogChannelInformations[i].Min=-32767;//by standart 1999
 					this.analogChannelInformations[i].Max=32767;//by standart 1999					
@@ -180,7 +186,7 @@ namespace Wisp.Comtrade
 			if(dataFileType==DataFileType.ASCII){
 				foreach(var analogChannelInformation in this.analogChannelInformations){
 					analogChannelInformation.Min=-32767;//by standart 1999
-					analogChannelInformation.Min=32767;//by standart 1999
+					analogChannelInformation.Max=32767;//by standart 1999
 				}
 			}			
 		}

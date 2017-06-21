@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>Wisp.Comtrade</id>
-    <version>0.9.1.1</version>
-    <title>COMTRADE parsing library</title>
+    <version>0.9.2</version>
+    <title>COMTRADE reading and creating library</title>
     <authors>Esti</authors>
     <owners>Esti</owners>
     <projectUrl>https://github.com/Esticonv/Wisp.Comtrade</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>COMTRADE parsing library (Net4.5)</description>
-    <releaseNotes>Fixed some critical bugs. Added unit tests</releaseNotes>
+    <description>COMTRADE (Common Format for Trancient Data Exchange for Power Systems) reading and creating library (Net4.5)</description>
+    <releaseNotes>Added ability to create COMTRADE files</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>COMTRADE</tags>
   </metadata>
