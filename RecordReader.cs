@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace Wisp.Comtrade
 {
 	/// <summary>
-	/// Main class for work with Comtrade
+	/// Class for parsing comtrade files
 	/// </summary>
 	public class RecordReader
 	{
@@ -24,7 +24,12 @@ namespace Wisp.Comtrade
 			private set;
 		}
 		
-		DataFileHandler data;
+		//DataFileHandler data;		
+		
+		internal DataFileHandler Data{
+			get;
+			private set;
+		}
 		
 		internal RecordReader()
 		{
@@ -50,12 +55,11 @@ namespace Wisp.Comtrade
 			}
 			else if(extention==GlobalSettings.extentionCFG || extention==GlobalSettings.extentionDAT){
 				this.Configuration=new ConfigurationHandler(System.IO.Path.Combine(path,filenameWithoutExtention+".cfg"));
-				this.data=new DataFileHandler(System.IO.Path.Combine(path,filenameWithoutExtention+".dat"),this.Configuration);
+				this.Data=new DataFileHandler(System.IO.Path.Combine(path,filenameWithoutExtention+".dat"),this.Configuration);
 			}
 			else{
 				throw new InvalidOperationException("Unsupported file extentions. Must be *.cfg, *.dat, *.cff");
-			}
-			
+			}			
 		}
 		
 		/// <summary>
@@ -64,20 +68,20 @@ namespace Wisp.Comtrade
 		/// <returns>In microSeconds</returns>
 		public IReadOnlyList<double> GetTimeLine()
 		{
-			var list=new double[this.data.samples.Length];
+			var list=new double[this.Data.samples.Length];
 			
 			if(this.Configuration.samplingRateCount == 0 || 
 			   (Math.Abs(this.Configuration.sampleRates[0].samplingFrequency) < 0.01d)){
 				//use timestamps in samples
-				for(int i=0;i<this.data.samples.Length;i++){
-					list[i]=this.data.samples[i].timestamp*this.Configuration.timeMultiplicationFactor;
+				for(int i=0;i<this.Data.samples.Length;i++){
+					list[i]=this.Data.samples[i].timestamp*this.Configuration.timeMultiplicationFactor;
 				}
 			}
 			else{//use calculated by samplingFrequency
 				double currentTime=0;
 				int sampleRateIndex=0;
 				const double secondToMicrosecond=1000000;
-				for(int i=0;i<this.data.samples.Length;i++){
+				for(int i=0;i<this.Data.samples.Length;i++){
 					list[i]=currentTime;
 					if(i>=this.Configuration.sampleRates[sampleRateIndex].lastSampleNumber){
 						sampleRateIndex++;
@@ -101,9 +105,9 @@ namespace Wisp.Comtrade
 					this.Configuration.AnalogChannelInformations[channelNumber].secondary;
 			}
 			
-			var list=new double[this.data.samples.Length];
-			for(int i=0;i<this.data.samples.Length;i++){				
-				list[i]=(this.data.samples[i].analogs[channelNumber]*this.Configuration.AnalogChannelInformations[channelNumber].a+
+			var list=new double[this.Data.samples.Length];
+			for(int i=0;i<this.Data.samples.Length;i++){				
+				list[i]=(this.Data.samples[i].analogs[channelNumber]*this.Configuration.AnalogChannelInformations[channelNumber].a+
 				         this.Configuration.AnalogChannelInformations[channelNumber].b)*Kt;
 			}
 			return list;
@@ -114,12 +118,11 @@ namespace Wisp.Comtrade
 		/// </summary>
 		public IReadOnlyList<bool> GetDigitalChannel(int channelNumber)
 		{
-			var list=new bool[this.data.samples.Length];
-			for(int i=0;i<this.data.samples.Length;i++){
-				list[i]=this.data.samples[i].digitals[channelNumber];
+			var list=new bool[this.Data.samples.Length];
+			for(int i=0;i<this.Data.samples.Length;i++){
+				list[i]=this.Data.samples[i].digitals[channelNumber];
 			}
 			return list;
-		}
-		
+		}		
 	}
 }

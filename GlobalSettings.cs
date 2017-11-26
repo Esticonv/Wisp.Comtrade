@@ -18,6 +18,7 @@ namespace Wisp.Comtrade
 		internal const char commaDelimiter=',';
 		internal const char whiteSpace=' ';
 		internal const string newLine="\r\n";
+		internal const string dateTimeFormat="dd/MM/yyyy,HH:mm:ss.ffffff";
 		/// <summary>
 		/// Extentions of COMTRADE files
 		/// </summary>
@@ -25,5 +26,6 @@ namespace Wisp.Comtrade
 		internal const string extentionCFG=".cfg";
 		internal const string extentionDAT=".dat";
 		internal const string extentionCFF=".cff";
+		
 	}
 }

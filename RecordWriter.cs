@@ -14,25 +14,59 @@ namespace Wisp.Comtrade
 {
 	/// <summary>
 	/// For creating COMTRADE files
-	/// Currently, supported only one mode COMTRADE: binary, timestamp guided
+	/// Currently, supported COMTRADE version 1999: ASCII or Binary, timestamp guided
 	/// </summary>
 	public class RecordWriter
 	{
-		string stationName=string.Empty;
-		string deviceId=string.Empty;
+		/// <summary>
+		/// 
+		/// </summary>
+		public string stationName=string.Empty;
+		/// <summary>
+		/// 
+		/// </summary>
+		public string deviceId=string.Empty;
 		
 		List<DataFileSample> samples;
 		List<AnalogChannelInformation> analogChannelInformations;			
 		List<DigitalChannelInformation> digitalChannelInformations;
+		List<SampleRate> sampleRates;
 		
 		/// <summary>
-		/// 
+		/// Time of first value in data
+		/// </summary>
+		public DateTime startTime;
+		
+		/// <summary>
+		/// Time of trigger point
+		/// </summary>
+		public DateTime triggerTime;
+		
+		/// <summary>
+		/// Create empty writer
 		/// </summary>
 		public RecordWriter()
 		{
 			this.samples=new List<DataFileSample>();
 			this.analogChannelInformations=new List<AnalogChannelInformation>();
 			this.digitalChannelInformations=new List<DigitalChannelInformation>();
+		}
+		
+		/// <summary>
+		/// Create writer with data from reader
+		/// </summary>
+		public RecordWriter(RecordReader reader)
+		{
+			this.stationName=reader.Configuration.stationName;
+			this.deviceId=reader.Configuration.deviceId;
+			
+			this.samples=new List<DataFileSample>(reader.Data.samples);
+			this.analogChannelInformations=new List<AnalogChannelInformation>(reader.Configuration.AnalogChannelInformations);
+			this.digitalChannelInformations=new List<DigitalChannelInformation>(reader.Configuration.DigitalChannelInformations);
+			this.sampleRates=new List<SampleRate>(reader.Configuration.sampleRates);
+			
+			this.startTime=reader.Configuration.startTime;
+			this.triggerTime=reader.Configuration.triggerTime;
 		}
 		
 		/// <summary>
@@ -123,18 +157,25 @@ namespace Wisp.Comtrade
 			
 			strings.Add("50.0");
 			
-			strings.Add("0");
+			if(this.sampleRates==null || this.sampleRates.Count==0){
+				strings.Add("0");				
+				strings.Add("0"+GlobalSettings.commaDelimiter+
+				            this.samples.Count.ToString());
+			}
+			else{
+				strings.Add(this.sampleRates.Count.ToString());
+				foreach(var sampleRate in this.sampleRates){
+					strings.Add(sampleRate.samplingFrequency.ToString()+GlobalSettings.commaDelimiter+
+					            sampleRate.lastSampleNumber.ToString());
+				}
+			}
 			
-			strings.Add("0"+GlobalSettings.commaDelimiter+
-			            this.samples.Count.ToString());
+			strings.Add(this.startTime.ToString(GlobalSettings.dateTimeFormat,
+			                       System.Globalization.CultureInfo.InvariantCulture));
 			
-			strings.Add("01/01/2017"+GlobalSettings.commaDelimiter+
-			            "00:00:00.000000");
-			
-			strings.Add("01/01/2017"+GlobalSettings.commaDelimiter+
-			            "00:00:00.000001");
-			
-			
+			strings.Add(this.triggerTime.ToString(GlobalSettings.dateTimeFormat,
+			                       System.Globalization.CultureInfo.InvariantCulture));
+									
 			switch (dataFileType) {
 				case DataFileType.ASCII:    strings.Add("ASCII"); break;
 				case DataFileType.Binary:   strings.Add("BINARY");  break;
@@ -181,9 +222,8 @@ namespace Wisp.Comtrade
 					this.analogChannelInformations[i].Min=-32767;//by standart 1999
 					this.analogChannelInformations[i].Max=32767;//by standart 1999					
 				}				
-			}
-			
-			if(dataFileType==DataFileType.ASCII){
+			}			
+			else if(dataFileType==DataFileType.ASCII){
 				foreach(var analogChannelInformation in this.analogChannelInformations){
 					analogChannelInformation.Min=-32767;//by standart 1999
 					analogChannelInformation.Max=32767;//by standart 1999

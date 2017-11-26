@@ -19,7 +19,7 @@ namespace Wisp.Comtrade
 		[Test]
 		public void ParserTest()
 		{
-			const string str=@"  8,F8-VN               ,N,,V     ,     0.012207,0,0,-32767,32767, 330000.0,100.0,S";			
+			const string str=@"  8,F8-VN               ,N,,V     ,     0.012207,1,2,-32767,32767, 330000.0,100.0,S";			
 			var channelInfo=new AnalogChannelInformation(str);
 			
 			Assert.That(channelInfo.Index, Is.EqualTo(8));
@@ -28,8 +28,8 @@ namespace Wisp.Comtrade
 			Assert.That(channelInfo.circuitComponent,Is.EqualTo(""));
 			Assert.That(channelInfo.units,Is.EqualTo("V"));
 			Assert.That(channelInfo.a,Is.EqualTo(0.012207).Within(0.001));
-			Assert.That(channelInfo.b,Is.EqualTo(0).Within(0.001));
-			Assert.That(channelInfo.skew,Is.EqualTo(0).Within(0.001));
+			Assert.That(channelInfo.b,Is.EqualTo(1).Within(0.001));
+			Assert.That(channelInfo.skew,Is.EqualTo(2).Within(0.001));
 			Assert.That(channelInfo.Min,Is.EqualTo(-32767).Within(0.001));
 			Assert.That(channelInfo.Max,Is.EqualTo(32767).Within(0.001));
 			Assert.That(channelInfo.primary,Is.EqualTo(330000.0).Within(0.001));

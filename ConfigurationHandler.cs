@@ -60,6 +60,16 @@ namespace Wisp.Comtrade
 		
 		internal int samplingRateCount=0;
 		internal List<SampleRate> sampleRates;
+		
+		/// <summary>
+		/// Time of first value in data
+		/// </summary>
+		public DateTime startTime{get;private set;}
+		
+		/// <summary>
+		/// Time of trigger point
+		/// </summary>
+		public DateTime triggerTime{get;private set;}
 						
 		internal DataFileType dataFileType=DataFileType.Undefined;	
 
@@ -72,7 +82,7 @@ namespace Wisp.Comtrade
 		
 		internal ConfigurationHandler(string fullPathToFileCFG)
 		{
-			this.Parse(System.IO.File.ReadAllLines(fullPathToFileCFG));
+			this.Parse(System.IO.File.ReadAllLines(fullPathToFileCFG,System.Text.Encoding.Default));
 		}
 		
 		internal void Parse(string[] strings)
@@ -108,15 +118,13 @@ namespace Wisp.Comtrade
 				}
 				strIndex+=this.samplingRateCount;
 			}
-			
-			//TODO пропущено две строки с таймштампом
-			strIndex+=2;
+						
+			this.startTime=ParseDateTime(strings[strIndex++]);
+			this.triggerTime=ParseDateTime(strings[strIndex++]);			
 			
 			this.ParseDataFileType(strings[strIndex++]);
-			//strIndex++;
 			
 			this.ParseTimeMultiplicationFactor(strings[strIndex++]);
-			//strIndex++;
 			
 			//TODO там остаток ещё пропущен (но он только для стандарта 2013 года)
 		}
@@ -149,6 +157,16 @@ namespace Wisp.Comtrade
 		void ParseNumberOfSampleRates(string str)
 		{
 			this.samplingRateCount=Convert.ToInt32(str.Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);			
+		}
+		
+		internal static DateTime ParseDateTime(string str)
+		{	// "dd/mm/yyyy,hh:mm:ss.ssssss"
+			DateTime result;
+			DateTime.TryParseExact(str,GlobalSettings.dateTimeFormat,
+			                       System.Globalization.CultureInfo.InvariantCulture,
+			                       System.Globalization.DateTimeStyles.AllowWhiteSpaces,
+			                       out result);
+			return result;
 		}
 		
 		void ParseDataFileType(string str)

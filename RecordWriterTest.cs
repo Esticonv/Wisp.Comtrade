@@ -16,6 +16,11 @@ namespace Wisp.Comtrade
 	[TestFixture]
 	internal class RecordWriterTest
 	{
+		const string pathDirectory=   @"D:\YandexDisk\Oscillogram\AutoCreated\";
+		const string fullPathAsciiOne=@"D:\YandexDisk\Oscillogram\AutoCreated\ascii.cfg";
+		const string fullPathAsciiTwo=@"D:\YandexDisk\Oscillogram\AutoCreated\ascii2.cfg";
+		
+		
 		RecordWriter GetWriterToTest()
 		{
 			var writer=new RecordWriter();
@@ -73,6 +78,8 @@ namespace Wisp.Comtrade
 			                    true,false,true,false,
 			                    true});
 			
+			writer.startTime=new DateTime(1234567890);
+			writer.triggerTime=new DateTime(1234569000);
 			return writer;
 		}
 		
@@ -118,27 +125,40 @@ namespace Wisp.Comtrade
 			Assert.That(digitals17[0],Is.EqualTo(true));
 			Assert.That(digitals17[1],Is.EqualTo(false));
 			Assert.That(digitals17[2],Is.EqualTo(true));
+			
+			Assert.That(reader.Configuration.startTime,  Is.EqualTo(new DateTime(1234567890)));
+			Assert.That(reader.Configuration.triggerTime,Is.EqualTo(new DateTime(1234569000)));
+			
+		}
+						
+		[Test, Order(1)]
+		public void SaveToFileAsciiTest()
+		{
+			var writer=this.GetWriterToTest();
+			writer.SaveToFile(fullPathAsciiOne,DataFileType.ASCII);			
+			this.ReaderAsserts(fullPathAsciiOne);			
 		}
 		
-		[Test]
+		[Test, Order(2)]
 		public void SaveToFileBinaryTest()
 		{
 			const string fullPath=@"D:\YandexDisk\Oscillogram\AutoCreated\bin.cfg";
 			var writer=this.GetWriterToTest();
 			writer.SaveToFile(fullPath,DataFileType.Binary);			
 			
-			this.ReaderAsserts(fullPath);
-			
+			this.ReaderAsserts(fullPath);			
 		}
 		
-		[Test]
-		public void SaveToFileAsciiTest()
+		[Test, Order(3)]
+		public void CreateWriterFromReaderTest()
 		{
-			const string fullPath=@"D:\YandexDisk\Oscillogram\AutoCreated\ascii.cfg";
-			var writer=this.GetWriterToTest();
-			writer.SaveToFile(fullPath,DataFileType.ASCII);			
+			const string fullPath=@"D:\YandexDisk\Oscillogram\AutoCreated\bin.cfg";
+			var reader=new RecordReader(fullPath);
+			var writer=new RecordWriter(reader);			
 			
-			this.ReaderAsserts(fullPath);			
+			writer.SaveToFile(fullPathAsciiTwo, DataFileType.ASCII);
+
+			//TODO дописать тест - открыть сконфигурированный и проверить равенство исходному бинарному			
 		}
 	}
 }
