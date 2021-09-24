@@ -1,5 +1,5 @@
 # Wisp.Comtrade
-COMTRADE parsing library for Net4.5
+COMTRADE parsing library for .Net
 
 
 
