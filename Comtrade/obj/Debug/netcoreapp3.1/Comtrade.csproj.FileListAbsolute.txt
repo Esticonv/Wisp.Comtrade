@@ -1,0 +1,9 @@
+C:\Users\Esti\Desktop\Wisp\Comtrade\bin\Debug\netcoreapp3.1\Wisp.Comtrade.deps.json
+C:\Users\Esti\Desktop\Wisp\Comtrade\bin\Debug\netcoreapp3.1\Wisp.Comtrade.dll
+C:\Users\Esti\Desktop\Wisp\Comtrade\bin\Debug\netcoreapp3.1\Wisp.Comtrade.pdb
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\netcoreapp3.1\Comtrade.csprojAssemblyReference.cache
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\netcoreapp3.1\Comtrade.AssemblyInfoInputs.cache
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\netcoreapp3.1\Comtrade.AssemblyInfo.cs
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\netcoreapp3.1\Comtrade.csproj.CoreCompileInputs.cache
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\netcoreapp3.1\Wisp.Comtrade.dll
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\netcoreapp3.1\Wisp.Comtrade.pdb

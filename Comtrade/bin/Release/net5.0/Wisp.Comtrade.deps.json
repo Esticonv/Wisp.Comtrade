@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "Wisp.Comtrade/0.9.3": {
+        "runtime": {
+          "Wisp.Comtrade.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Wisp.Comtrade/0.9.3": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,0 +1,12 @@
+C:\Users\Esti\Desktop\Wisp\Comtrade\bin\Debug\net5.0\Wisp.Comtrade.deps.json
+C:\Users\Esti\Desktop\Wisp\Comtrade\bin\Debug\net5.0\Wisp.Comtrade.dll
+C:\Users\Esti\Desktop\Wisp\Comtrade\bin\Debug\net5.0\ref\Wisp.Comtrade.dll
+C:\Users\Esti\Desktop\Wisp\Comtrade\bin\Debug\net5.0\Wisp.Comtrade.pdb
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net5.0\Comtrade.csproj.AssemblyReference.cache
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net5.0\Comtrade.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net5.0\Comtrade.AssemblyInfoInputs.cache
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net5.0\Comtrade.AssemblyInfo.cs
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net5.0\Comtrade.csproj.CoreCompileInputs.cache
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net5.0\Wisp.Comtrade.dll
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net5.0\ref\Wisp.Comtrade.dll
+C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net5.0\Wisp.Comtrade.pdb

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Wisp.Comtrade</id>
+    <version>0.9.3</version>
+    <authors>Esti</authors>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework="net5.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\Esti\Desktop\Wisp\Comtrade\bin\Release\net5.0\Wisp.Comtrade.dll" target="lib\net5.0\Wisp.Comtrade.dll" />
+  </files>
+</package>
