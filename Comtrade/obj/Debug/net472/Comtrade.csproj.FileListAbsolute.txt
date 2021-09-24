@@ -1,8 +1,0 @@
-C:\Users\Esti\Desktop\Wisp\Comtrade\bin\Debug\net472\Wisp.Comtrade.dll
-C:\Users\Esti\Desktop\Wisp\Comtrade\bin\Debug\net472\Wisp.Comtrade.pdb
-C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net472\Comtrade.AssemblyInfoInputs.cache
-C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net472\Comtrade.AssemblyInfo.cs
-C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net472\Comtrade.csproj.CoreCompileInputs.cache
-C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net472\Wisp.Comtrade.dll
-C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net472\Wisp.Comtrade.pdb
-C:\Users\Esti\Desktop\Wisp\Comtrade\obj\Debug\net472\Comtrade.csprojAssemblyReference.cache
