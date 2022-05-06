@@ -1,26 +1,17 @@
-﻿/*
- * Created by SharpDevelop.
- * User: EstiMain
- * Date: 30.05.2017
- * Time: 20:55
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using NUnit.Framework;
 
 namespace Wisp.Comtrade
 {
-	[TestFixture]
-	internal class RecordReaderTest
+	[TestClass]
+	public class RecordReaderTest
 	{
 		const string rootYandexDiskDirectory = RecordWriterTest.rootYandexDiskDirectory;
 
 		/// <summary>
 		/// Success only on maintainer machine 
 		/// </summary>
-		[Test]		
+		[TestMethod]		
 		public void TestOpenFile()
 		{	
 			RecordReader record;
@@ -52,10 +43,10 @@ namespace Wisp.Comtrade
 			record.GetDigitalChannel(0);			
 		}
 		
-		[Test]
+		[TestMethod]
 		public void TestNotSupportedExtentions()
-		{					
-			Assert.Throws<InvalidOperationException> (() => new RecordReader("notComtradeExtentions.trr"));
+		{
+			Assert.ThrowsException<InvalidOperationException>(() => new RecordReader("notComtradeExtentions.trr"));
 		}
 	}
 }

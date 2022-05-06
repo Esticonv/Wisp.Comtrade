@@ -1,20 +1,10 @@
-﻿/*
- * Created by SharpDevelop.
- * User: EstiMain
- * Date: 07.06.2017
- * Time: 12:41
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
- 
-
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using NUnit.Framework;
 
 namespace Wisp.Comtrade
 {
-	[TestFixture]
-	internal class RecordWriterTest
+	[TestClass]
+	public class RecordWriterTest
 	{
 		public const string rootYandexDiskDirectory = @"C:\Users\Esti\YandexDisk\";
 		const string pathDirectory=		rootYandexDiskDirectory + @"Oscillogram\AutoCreated\";
@@ -87,9 +77,11 @@ namespace Wisp.Comtrade
 		void ReaderAsserts(string fullpath)
 		{
 			var reader=new RecordReader(fullpath);
-			Assert.That(reader.Configuration.AnalogChannelInformations.Count,Is.EqualTo(3));
-			Assert.That(reader.Configuration.DigitalChannelInformations.Count,Is.EqualTo(17));
-			
+			Assert.AreEqual(3, reader.Configuration.AnalogChannelInformations.Count);
+			Assert.AreEqual(17, reader.Configuration.DigitalChannelInformations.Count);
+			//Assert.That(reader.Configuration.AnalogChannelInformations.Count,Is.EqualTo(3));
+			//Assert.That(reader.Configuration.DigitalChannelInformations.Count,Is.EqualTo(17));
+
 			var timeLine=reader.GetTimeLine();
 			var analogs1=reader.GetAnalogPrimaryChannel(0);
 			var analogs2=reader.GetAnalogPrimaryChannel(1);
@@ -97,51 +89,50 @@ namespace Wisp.Comtrade
 			var digitals1=reader.GetDigitalChannel(0);
 			var digitals5=reader.GetDigitalChannel(4);
 			var digitals17=reader.GetDigitalChannel(16);
-			
-						
-			Assert.That(timeLine[0],Is.EqualTo(0).Within(0.01));
-			Assert.That(timeLine[1],Is.EqualTo(500).Within(0.01));
-			Assert.That(timeLine[2],Is.EqualTo(1000).Within(0.01));
-			
-			Assert.That(analogs1[0],Is.EqualTo(0).Within(0.01));
-			Assert.That(analogs1[1],Is.EqualTo(1.0).Within(0.01));
-			Assert.That(analogs1[2],Is.EqualTo(-1.0).Within(0.01));
-			
-			Assert.That(analogs2[0],Is.EqualTo(0).Within(0.01));
-			Assert.That(analogs2[1],Is.EqualTo(2.0).Within(0.01));
-			Assert.That(analogs2[2],Is.EqualTo(2.0).Within(0.01));
-			
-			Assert.That(analogs3[0],Is.EqualTo(0).Within(0.01));
-			Assert.That(analogs3[1],Is.EqualTo(3.0).Within(0.01));
-			Assert.That(analogs3[2],Is.EqualTo(-3.5).Within(0.01));
-			
-			Assert.That(digitals1[0],Is.EqualTo(true));
-			Assert.That(digitals1[1],Is.EqualTo(false));
-			Assert.That(digitals1[2],Is.EqualTo(false));
-			
-			Assert.That(digitals5[0],Is.EqualTo(true));
-			Assert.That(digitals5[1],Is.EqualTo(false));
-			Assert.That(digitals5[2],Is.EqualTo(true));
-			
-			Assert.That(digitals17[0],Is.EqualTo(true));
-			Assert.That(digitals17[1],Is.EqualTo(false));
-			Assert.That(digitals17[2],Is.EqualTo(true));
-			
-			Assert.That(reader.Configuration.StartTime,  Is.EqualTo(new DateTime(1234567890)));
-			Assert.That(reader.Configuration.TriggerTime,Is.EqualTo(new DateTime(1234569000)));
-			
+
+
+			Assert.AreEqual(   0,	timeLine[0], 0.01);
+			Assert.AreEqual( 500,	timeLine[1], 0.01);
+			Assert.AreEqual(1000,	timeLine[2], 0.01);
+
+			Assert.AreEqual(0,		analogs1[0], 0.01);
+			Assert.AreEqual(1.0,	analogs1[1], 0.01);
+			Assert.AreEqual(-1.0,	analogs1[2], 0.01);
+
+			Assert.AreEqual(0,		analogs2[0], 0.01);
+			Assert.AreEqual(2.0,	analogs2[1], 0.01);
+			Assert.AreEqual(2.0,	analogs2[2], 0.01);
+
+			Assert.AreEqual(0,		analogs3[0], 0.01);
+			Assert.AreEqual(3.0,	analogs3[1], 0.01);
+			Assert.AreEqual(-3.5,	analogs3[2], 0.01);
+
+			Assert.AreEqual(true,	digitals1[0]);
+			Assert.AreEqual(false,	digitals1[1]);
+			Assert.AreEqual(false,	digitals1[2]);
+
+			Assert.AreEqual(true,	digitals5[0]);
+			Assert.AreEqual(false,	digitals5[1]);
+			Assert.AreEqual(true,	digitals5[2]);
+
+			Assert.AreEqual(true,	digitals17[0]);
+			Assert.AreEqual(false,	digitals17[1]);
+			Assert.AreEqual(true,	digitals17[2]);
+
+			Assert.AreEqual(new DateTime(1234567890), reader.Configuration.StartTime);
+			Assert.AreEqual(new DateTime(1234569000), reader.Configuration.TriggerTime);
 		}
 						
-		[Test, Order(1)]
-		public void SaveToFileAsciiTest()
+		[TestMethod]
+		public void Order010_SaveToFileAsciiTest()
 		{
 			var writer=this.GetWriterToTest();
 			writer.SaveToFile(fullPathAsciiOne,DataFileType.ASCII);			
 			this.ReaderAsserts(fullPathAsciiOne);			
 		}
 		
-		[Test, Order(2)]
-		public void SaveToFileBinaryTest()
+		[TestMethod]
+		public void Order020_SaveToFileBinaryTest()
 		{
 			const string fullPath= rootYandexDiskDirectory+@"Oscillogram\AutoCreated\bin.cfg";
 			var writer=this.GetWriterToTest();
@@ -150,15 +141,14 @@ namespace Wisp.Comtrade
 			this.ReaderAsserts(fullPath);			
 		}
 		
-		[Test, Order(3)]
-		public void CreateWriterFromReaderTest()
+		[TestMethod]
+		public void Order030_CreateWriterFromReaderTest()
 		{
 			const string fullPath= rootYandexDiskDirectory+@"Oscillogram\AutoCreated\bin.cfg";
 			var reader=new RecordReader(fullPath);
 			var writer=new RecordWriter(reader);			
 			
 			writer.SaveToFile(fullPathAsciiTwo, DataFileType.ASCII);
-
 			//TODO дописать тест - открыть сконфигурированный и проверить равенство исходному бинарному			
 		}
 	}

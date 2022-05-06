@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+	<Nullable>enable</Nullable>
     <AssemblyName>Wisp.Comtrade</AssemblyName>
     <RootNamespace>Wisp.Comtrade</RootNamespace>
-    <Version>0.9.3</Version>
+    <Version>0.9.4</Version>
     <Authors>Esti</Authors>
     <Company>Esti corp</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

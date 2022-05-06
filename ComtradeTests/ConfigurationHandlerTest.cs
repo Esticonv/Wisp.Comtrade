@@ -1,21 +1,12 @@
-﻿/*
- * Created by SharpDevelop.
- * User: EstiMain
- * Date: 23.05.2017
- * Time: 21:33
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using NUnit.Framework;
 
 namespace Wisp.Comtrade
 {
-	[TestFixture]
-	internal class ConfigurationHandlerTest
+	[TestClass]
+	public class ConfigurationHandlerTest
 	{
-		[Test]
+		[TestMethod]
 		public void ParserTest()
 		{
 			const string str=@"MASHUK-W2D-C60-1    ,520                 ,1999
@@ -36,20 +27,20 @@ BINARY
 			var strings=str.Split(new string[]{"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
 			var configHandler=new ConfigurationHandler();
 			configHandler.Parse(strings);
-			
-			Assert.That(configHandler.StationName,Is.EqualTo("MASHUK-W2D-C60-1"));
-			Assert.That(configHandler.DeviceId,Is.EqualTo("520"));
-			Assert.That(configHandler.version,Is.EqualTo(ComtradeVersion.V1999));
-			Assert.That(configHandler.analogChannelsCount,Is.EqualTo(2));
-			Assert.That(configHandler.AnalogChannelInformations.Count,Is.EqualTo(2));
-			Assert.That(configHandler.digitalChannelsCount,Is.EqualTo(3));
-			Assert.That(configHandler.DigitalChannelInformations.Count,Is.EqualTo(3));
-			Assert.That(configHandler.frequency,Is.EqualTo(50).Within(0.1));
-			Assert.That(configHandler.samplingRateCount,Is.EqualTo(0));
-			Assert.That(configHandler.sampleRates.Count,Is.EqualTo(1));
-			//время1
-			//время2
-			Assert.That(configHandler.dataFileType,Is.EqualTo(DataFileType.Binary));
+
+			Assert.AreEqual("MASHUK-W2D-C60-1",		configHandler.StationName);
+			Assert.AreEqual("520",					configHandler.DeviceId);
+			Assert.AreEqual(ComtradeVersion.V1999,	configHandler.version);
+			Assert.AreEqual(2,						configHandler.analogChannelsCount);
+			Assert.AreEqual(2,						configHandler.AnalogChannelInformations.Count);
+			Assert.AreEqual(3,						configHandler.digitalChannelsCount);
+			Assert.AreEqual(3,						configHandler.DigitalChannelInformations.Count);
+			Assert.AreEqual(50,						configHandler.frequency, 0.01) ;
+			Assert.AreEqual(0,						configHandler.samplingRateCount);
+			Assert.AreEqual(1,						configHandler.sampleRates.Count);
+			//Assert.AreEqual(, ); время1
+			//Assert.AreEqual(, ); время2
+			Assert.AreEqual(DataFileType.Binary, configHandler.dataFileType);
 			//остальное дописать
 		}
 	}

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Wisp.Comtrade</id>
-    <version>0.9.3</version>
+    <version>0.9.4</version>
     <title>COMTRADE reading and creating library</title>
     <authors>Esti</authors>
     <owners>Esti</owners>
@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>COMTRADE (Common Format for Trancient Data Exchange for Power Systems) reading and creating library (Net.Core)</description>
     <releaseNotes>Added ability to create COMTRADE files</releaseNotes>
-    <copyright>Copyright 2021</copyright>
+    <copyright>Copyright 2022</copyright>
     <tags>COMTRADE</tags>
   </metadata>
 	<files>
