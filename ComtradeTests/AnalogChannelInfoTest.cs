@@ -1,39 +1,30 @@
-﻿/*
- * Created by SharpDevelop.
- * User: EstiMain
- * Date: 23.05.2017
- * Time: 21:00
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
- 
-using System;
-using NUnit.Framework;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Wisp.Comtrade
 {
-	[TestFixture]
-	internal class AnalogChannelInfoTest
+	[TestClass]
+	public class AnalogChannelInfoTest
 	{
-		[Test]
+		[TestMethod]
 		public void ParserTest()
 		{
 			const string str=@"  8,F8-VN               ,N,,V     ,     0.012207,1,2,-32767,32767, 330000.0,100.0,S";			
 			var channelInfo=new AnalogChannelInformation(str);
-			
-			Assert.That(channelInfo.Index, Is.EqualTo(8));
-			Assert.That(channelInfo.name,Is.EqualTo("F8-VN"));
-			Assert.That(channelInfo.phase,Is.EqualTo("N"));
-			Assert.That(channelInfo.circuitComponent,Is.EqualTo(""));
-			Assert.That(channelInfo.units,Is.EqualTo("V"));
-			Assert.That(channelInfo.a,Is.EqualTo(0.012207).Within(0.001));
-			Assert.That(channelInfo.b,Is.EqualTo(1).Within(0.001));
-			Assert.That(channelInfo.skew,Is.EqualTo(2).Within(0.001));
-			Assert.That(channelInfo.Min,Is.EqualTo(-32767).Within(0.001));
-			Assert.That(channelInfo.Max,Is.EqualTo(32767).Within(0.001));
-			Assert.That(channelInfo.primary,Is.EqualTo(330000.0).Within(0.001));
-			Assert.That(channelInfo.secondary,Is.EqualTo(100.0).Within(0.001));
-			Assert.That(channelInfo.isPrimary,Is.EqualTo(false));	
+
+			Assert.AreEqual(8,			channelInfo.Index);
+			Assert.AreEqual("F8-VN",	channelInfo.name);
+			Assert.AreEqual("N",		channelInfo.phase);
+			Assert.AreEqual("",			channelInfo.circuitComponent);
+			Assert.AreEqual("V",		channelInfo.units);
+			Assert.AreEqual(0.012207d,	channelInfo.a, 0.001d);
+			Assert.AreEqual(1,			channelInfo.b, 0.001d);
+			Assert.AreEqual(2,			channelInfo.skew, 0.001d);
+			Assert.AreEqual(-32767,		channelInfo.Min, 0.001d);
+			Assert.AreEqual(32767,		channelInfo.Max, 0.001d);
+			Assert.AreEqual(330000.0d,	channelInfo.primary, 0.001d);
+			Assert.AreEqual(100.0,		channelInfo.secondary, 0.001d);
+			Assert.AreEqual(false,		channelInfo.isPrimary);
 		}
 	}
 }

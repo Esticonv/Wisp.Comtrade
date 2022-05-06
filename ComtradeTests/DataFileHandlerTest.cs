@@ -1,36 +1,26 @@
-﻿/*
- * Created by SharpDevelop.
- * User: EstiMain
- * Date: 08.06.2017
- * Time: 11:59
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-
-using System;
-using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Wisp.Comtrade
 {
-	[TestFixture]
-	internal class DataFileHandlerTest
+	[TestClass]
+	public class DataFileHandlerTest
 	{
-		[Test]
+		[TestMethod]
 		public void TestDigitalByteCount()
 		{
-			Assert.That(DataFileHandler.GetDigitalByteCount(7),Is.EqualTo(2));
-			Assert.That(DataFileHandler.GetDigitalByteCount(16),Is.EqualTo(2));
-			Assert.That(DataFileHandler.GetDigitalByteCount(17),Is.EqualTo(4));
-			Assert.That(DataFileHandler.GetDigitalByteCount(32),Is.EqualTo(4));			
+			Assert.AreEqual(2, DataFileHandler.GetDigitalByteCount(7));
+			Assert.AreEqual(2, DataFileHandler.GetDigitalByteCount(16));
+			Assert.AreEqual(4, DataFileHandler.GetDigitalByteCount(17));
+			Assert.AreEqual(4, DataFileHandler.GetDigitalByteCount(32));		
 		}
 		
-		[Test]
+		[TestMethod]
 		public void TestByteCount()
 		{
-			Assert.That(DataFileHandler.GetByteCount(1,1,DataFileType.Binary),Is.EqualTo(12));
-			Assert.That(DataFileHandler.GetByteCount(5,17,DataFileType.Binary),Is.EqualTo(22));
-			Assert.That(DataFileHandler.GetByteCount(5,17,DataFileType.Float32),Is.EqualTo(32));
-			Assert.That(DataFileHandler.GetByteCount(5,17,DataFileType.Binary32),Is.EqualTo(32));			
+			Assert.AreEqual(12, DataFileHandler.GetByteCount(1, 1, DataFileType.Binary));
+			Assert.AreEqual(22, DataFileHandler.GetByteCount(5, 17, DataFileType.Binary));
+			Assert.AreEqual(32, DataFileHandler.GetByteCount(5, 17, DataFileType.Float32));
+			Assert.AreEqual(32, DataFileHandler.GetByteCount(5, 17, DataFileType.Binary32));		
 		}
 	}
 }
