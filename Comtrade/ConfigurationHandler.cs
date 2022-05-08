@@ -63,9 +63,14 @@ namespace Wisp.Comtrade
 		
 		internal ConfigurationHandler(string fullPathToFileCFG)
 		{
-			this.Parse(System.IO.File.ReadAllLines(fullPathToFileCFG,System.Text.Encoding.Default));
+			this.Parse(System.IO.File.ReadAllLines(fullPathToFileCFG, System.Text.Encoding.Default));
 		}
-		
+
+		internal ConfigurationHandler(string[] strings)
+		{
+			this.Parse(strings);
+		}
+
 		internal void Parse(string[] strings)
 		{
 			this.ParseFirstLine(strings[0]);

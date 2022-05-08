@@ -15,7 +15,7 @@ namespace Wisp.Comtrade
 	
 	internal static class ComtradeVersionConverter
 	{
-		internal static ComtradeVersion Get(string text)
+		internal static ComtradeVersion Get(string? text)
 		{
 			if(text==null)return ComtradeVersion.V1991;
 			if(text=="1991")return ComtradeVersion.V1991;

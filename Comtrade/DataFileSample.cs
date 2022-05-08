@@ -106,7 +106,7 @@ namespace Wisp.Comtrade
 		
 		public byte[] ToByteDAT(DataFileType dataFileType, IReadOnlyList<AnalogChannelInformation> analogInformations)
 		{
-			var result=new byte[DataFileHandler.GetByteCount(this.analogs.Length,this.digitals.Length,dataFileType)];
+			var result=new byte[DataFileHandler.GetByteCountInOneSample(this.analogs.Length,this.digitals.Length,dataFileType)];
 			int analogOneChannelLength= dataFileType == DataFileType.Binary ? 2 : 4;
 			int digitalByteStart=8+analogOneChannelLength*this.analogs.Length;
 			

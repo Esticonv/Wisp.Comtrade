@@ -17,10 +17,10 @@ namespace Wisp.Comtrade
 		[TestMethod]
 		public void TestByteCount()
 		{
-			Assert.AreEqual(12, DataFileHandler.GetByteCount(1, 1, DataFileType.Binary));
-			Assert.AreEqual(22, DataFileHandler.GetByteCount(5, 17, DataFileType.Binary));
-			Assert.AreEqual(32, DataFileHandler.GetByteCount(5, 17, DataFileType.Float32));
-			Assert.AreEqual(32, DataFileHandler.GetByteCount(5, 17, DataFileType.Binary32));		
+			Assert.AreEqual(12, DataFileHandler.GetByteCountInOneSample(1, 1, DataFileType.Binary));
+			Assert.AreEqual(22, DataFileHandler.GetByteCountInOneSample(5, 17, DataFileType.Binary));
+			Assert.AreEqual(32, DataFileHandler.GetByteCountInOneSample(5, 17, DataFileType.Float32));
+			Assert.AreEqual(32, DataFileHandler.GetByteCountInOneSample(5, 17, DataFileType.Binary32));		
 		}
 	}
 }

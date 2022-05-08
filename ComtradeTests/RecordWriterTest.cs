@@ -8,10 +8,13 @@ namespace Wisp.Comtrade
 	{
 		public const string rootYandexDiskDirectory = @"C:\Users\Esti\YandexDisk\";
 		const string pathDirectory=		rootYandexDiskDirectory + @"Oscillogram\AutoCreated\";
-		const string fullPathAsciiOne=	rootYandexDiskDirectory + @"Oscillogram\AutoCreated\ascii.cfg";
-		const string fullPathAsciiTwo=	rootYandexDiskDirectory + @"Oscillogram\AutoCreated\ascii2.cfg";
-		
-		
+		const string fullPathAscii=	rootYandexDiskDirectory + @"Oscillogram\AutoCreated\ascii.cfg";
+		const string fullPathBinary = rootYandexDiskDirectory + @"Oscillogram\AutoCreated\binary.cfg";
+		//const string fullPathAsciiTwo=	rootYandexDiskDirectory + @"Oscillogram\AutoCreated\ascii2.cfg";
+		const string fullPathAsciiSingleFile = rootYandexDiskDirectory + @"Oscillogram\AutoCreated\asciiSingleFile.cff";
+		const string fullPathBinarySingleFile = rootYandexDiskDirectory + @"Oscillogram\AutoCreated\binarySingleFile.cff";
+		//const string fullPathAsciiTwo = rootYandexDiskDirectory + @"Oscillogram\AutoCreated\ascii2.cfg";
+
 		RecordWriter GetWriterToTest()
 		{
 			var writer=new RecordWriter();
@@ -79,8 +82,6 @@ namespace Wisp.Comtrade
 			var reader=new RecordReader(fullpath);
 			Assert.AreEqual(3, reader.Configuration.AnalogChannelInformations.Count);
 			Assert.AreEqual(17, reader.Configuration.DigitalChannelInformations.Count);
-			//Assert.That(reader.Configuration.AnalogChannelInformations.Count,Is.EqualTo(3));
-			//Assert.That(reader.Configuration.DigitalChannelInformations.Count,Is.EqualTo(17));
 
 			var timeLine=reader.GetTimeLine();
 			var analogs1=reader.GetAnalogPrimaryChannel(0);
@@ -89,7 +90,6 @@ namespace Wisp.Comtrade
 			var digitals1=reader.GetDigitalChannel(0);
 			var digitals5=reader.GetDigitalChannel(4);
 			var digitals17=reader.GetDigitalChannel(16);
-
 
 			Assert.AreEqual(   0,	timeLine[0], 0.01);
 			Assert.AreEqual( 500,	timeLine[1], 0.01);
@@ -124,33 +124,37 @@ namespace Wisp.Comtrade
 		}
 						
 		[TestMethod]
-		public void Order010_SaveToFileAsciiTest()
+		public void SaveToFileTwoFilesAsciiTest()
 		{
 			var writer=this.GetWriterToTest();
-			writer.SaveToFile(fullPathAsciiOne,DataFileType.ASCII);			
-			this.ReaderAsserts(fullPathAsciiOne);			
+			writer.SaveToFile(fullPathAscii, singleFile:false, DataFileType.ASCII);			
+			this.ReaderAsserts(fullPathAscii);			
 		}
 		
 		[TestMethod]
-		public void Order020_SaveToFileBinaryTest()
+		public void SaveToFileTwoFilesBinaryTest()
 		{
-			const string fullPath= rootYandexDiskDirectory+@"Oscillogram\AutoCreated\bin.cfg";
 			var writer=this.GetWriterToTest();
-			writer.SaveToFile(fullPath,DataFileType.Binary);			
-			
-			this.ReaderAsserts(fullPath);			
+			writer.SaveToFile(fullPathBinary, singleFile: false, DataFileType.Binary);			
+			this.ReaderAsserts(fullPathBinary);			
 		}
-		
+
 		[TestMethod]
-		public void Order030_CreateWriterFromReaderTest()
+		public void SaveToFileSingleAsciiTest()
 		{
-			const string fullPath= rootYandexDiskDirectory+@"Oscillogram\AutoCreated\bin.cfg";
-			var reader=new RecordReader(fullPath);
-			var writer=new RecordWriter(reader);			
-			
-			writer.SaveToFile(fullPathAsciiTwo, DataFileType.ASCII);
-			//TODO дописать тест - открыть сконфигурированный и проверить равенство исходному бинарному			
+			var writer = this.GetWriterToTest();
+			writer.SaveToFile(fullPathAsciiSingleFile, singleFile: true, DataFileType.ASCII);
+			this.ReaderAsserts(fullPathAsciiSingleFile);
 		}
+
+		[TestMethod]
+		public void SaveToFileSingleFileBinaryTest()
+		{
+			var writer = this.GetWriterToTest();
+			writer.SaveToFile(fullPathBinarySingleFile, singleFile: true, DataFileType.Binary);
+			this.ReaderAsserts(fullPathBinarySingleFile);
+		}
+
 	}
 }
 

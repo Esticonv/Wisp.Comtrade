@@ -63,23 +63,6 @@ namespace Wisp.Comtrade
 			Assert.AreEqual(false, sample.digitals[3]);
 			Assert.AreEqual(true, sample.digitals[4]);
 			Assert.AreEqual(true, sample.digitals[5]);
-
-			/*Assert.That(sample.number,Is.EqualTo(5242885));
-			Assert.That(sample.timestamp, Is.EqualTo(667));
-			Assert.That(sample.analogs.Length,Is.EqualTo(6));
-			Assert.That(sample.analogs[0],Is.EqualTo(-760));
-			Assert.That(sample.analogs[1],Is.EqualTo(1274));
-			Assert.That(sample.analogs[2],Is.EqualTo(72));
-			Assert.That(sample.analogs[3],Is.EqualTo(61));
-			Assert.That(sample.analogs[4],Is.EqualTo(-140));
-			Assert.That(sample.analogs[5],Is.EqualTo(-502));
-			Assert.That(sample.digitals.Length,Is.EqualTo(6));
-			Assert.That(sample.digitals[0],Is.EqualTo(false));
-			Assert.That(sample.digitals[1],Is.EqualTo(false));
-			Assert.That(sample.digitals[2],Is.EqualTo(false));
-			Assert.That(sample.digitals[3],Is.EqualTo(false));
-			Assert.That(sample.digitals[4],Is.EqualTo(true));
-			Assert.That(sample.digitals[5],Is.EqualTo(true));*/
 		}
 		
 		[TestMethod]
@@ -113,7 +96,6 @@ namespace Wisp.Comtrade
 			
 			for(int i=0;i<bytes.Length;i++){
 				Assert.AreEqual(bytes[i],result[i]);
-				//Assert.That(result[i],Is.EqualTo(bytes[i]));
 			}
 						
 		}
@@ -173,49 +155,6 @@ namespace Wisp.Comtrade
 			Assert.AreEqual(false, sample.digitals[31]);
 
 			Assert.AreEqual(true, sample.digitals[32]);
-
-			/*Assert.That(sample.number,Is.EqualTo(5));
-			Assert.That(sample.timestamp, Is.EqualTo(667));
-			Assert.That(sample.analogs.Length,Is.EqualTo(0));		
-			Assert.That(sample.digitals.Length,Is.EqualTo(33));
-			
-			Assert.That(sample.digitals[0],Is.EqualTo(true));
-			Assert.That(sample.digitals[1],Is.EqualTo(true));
-			Assert.That(sample.digitals[2],Is.EqualTo(true));
-			Assert.That(sample.digitals[3],Is.EqualTo(true));
-			Assert.That(sample.digitals[4],Is.EqualTo(false));
-			Assert.That(sample.digitals[5],Is.EqualTo(false));
-			Assert.That(sample.digitals[6],Is.EqualTo(false));
-			Assert.That(sample.digitals[7],Is.EqualTo(false));
-			
-			Assert.That(sample.digitals[8],Is.EqualTo(true));
-			Assert.That(sample.digitals[9],Is.EqualTo(true));
-			Assert.That(sample.digitals[10],Is.EqualTo(true));
-			Assert.That(sample.digitals[11],Is.EqualTo(true));
-			Assert.That(sample.digitals[12],Is.EqualTo(false));
-			Assert.That(sample.digitals[13],Is.EqualTo(false));
-			Assert.That(sample.digitals[14],Is.EqualTo(false));
-			Assert.That(sample.digitals[15],Is.EqualTo(false));
-			
-			Assert.That(sample.digitals[16],Is.EqualTo(false));			
-			Assert.That(sample.digitals[17],Is.EqualTo(true));
-			Assert.That(sample.digitals[18],Is.EqualTo(false));
-			Assert.That(sample.digitals[19],Is.EqualTo(true));
-			Assert.That(sample.digitals[20],Is.EqualTo(true));
-			Assert.That(sample.digitals[21],Is.EqualTo(false));
-			Assert.That(sample.digitals[22],Is.EqualTo(true));
-			Assert.That(sample.digitals[23],Is.EqualTo(false));
-			
-			Assert.That(sample.digitals[24],Is.EqualTo(false));
-			Assert.That(sample.digitals[25],Is.EqualTo(true));
-			Assert.That(sample.digitals[26],Is.EqualTo(false));
-			Assert.That(sample.digitals[27],Is.EqualTo(true));
-			Assert.That(sample.digitals[28],Is.EqualTo(true));
-			Assert.That(sample.digitals[29],Is.EqualTo(false));
-			Assert.That(sample.digitals[30],Is.EqualTo(true));
-			Assert.That(sample.digitals[31],Is.EqualTo(false));
-			
-			Assert.That(sample.digitals[32],Is.EqualTo(true));*/
 		}
 	}
 }

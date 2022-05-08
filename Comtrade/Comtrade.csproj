@@ -5,7 +5,7 @@
 	<Nullable>enable</Nullable>
     <AssemblyName>Wisp.Comtrade</AssemblyName>
     <RootNamespace>Wisp.Comtrade</RootNamespace>
-    <Version>0.9.4</Version>
+    <Version>0.9.5</Version>
     <Authors>Esti</Authors>
     <Company>Esti corp</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

@@ -6,18 +6,21 @@ namespace Wisp.Comtrade
 {
 	/// <summary>
 	/// For creating COMTRADE files
-	/// Currently, supported COMTRADE version 1999: ASCII or Binary, timestamp guided
 	/// </summary>
 	public class RecordWriter
 	{
-		
+		/// <summary>
+		/// Hz
+		/// </summary>
+		public double Frequency = 50;
 		public string StationName=string.Empty;	
 		public string DeviceId=string.Empty;
 		
-		readonly List<DataFileSample> samples;
-		readonly List<AnalogChannelInformation> analogChannelInformations;
-		readonly List<DigitalChannelInformation> digitalChannelInformations;
-		readonly List<SampleRate> sampleRates;
+		readonly List<DataFileSample> samples=new();
+		readonly List<AnalogChannelInformation> analogChannelInformations=new();
+		readonly List<DigitalChannelInformation> digitalChannelInformations=new();
+		readonly List<SampleRate> sampleRates=new();
+
 		
 		/// <summary>
 		/// Time of first value in data
@@ -34,9 +37,6 @@ namespace Wisp.Comtrade
 		/// </summary>
 		public RecordWriter()
 		{
-			this.samples=new List<DataFileSample>();
-			this.analogChannelInformations=new List<AnalogChannelInformation>();
-			this.digitalChannelInformations=new List<DigitalChannelInformation>();
 		}
 		
 		/// <summary>
@@ -46,11 +46,11 @@ namespace Wisp.Comtrade
 		{
 			this.StationName=reader.Configuration.StationName;
 			this.DeviceId=reader.Configuration.DeviceId;
-			
-			this.samples=new List<DataFileSample>(reader.Data.samples);
-			this.analogChannelInformations=new List<AnalogChannelInformation>(reader.Configuration.AnalogChannelInformations);
-			this.digitalChannelInformations=new List<DigitalChannelInformation>(reader.Configuration.DigitalChannelInformations);
-			this.sampleRates=new List<SampleRate>(reader.Configuration.sampleRates);
+
+			this.samples.AddRange(reader.Data.samples);
+			this.analogChannelInformations.AddRange(reader.Configuration.AnalogChannelInformations);
+			this.digitalChannelInformations.AddRange(reader.Configuration.DigitalChannelInformations);
+			this.sampleRates.AddRange(reader.Configuration.sampleRates);
 			
 			this.StartTime=reader.Configuration.StartTime;
 			this.TriggerTime=reader.Configuration.TriggerTime;
@@ -82,53 +82,197 @@ namespace Wisp.Comtrade
 		/// <param name="digitals"></param>
 		public void AddSample(int timestamp, double[] analogs, bool[] digitals)
 		{			
-			double[] notNullAnalogs=analogs;
-			bool[] notNullDigitals=digitals;
-			if(analogs==null){
-				notNullAnalogs= Array.Empty<double>();
-			}
-			if(digitals==null){
-				notNullDigitals= Array.Empty<bool>();
+			if(this.analogChannelInformations.Count!= analogs.Length){
+				throw new InvalidOperationException(
+					$"Analogs count ({ analogs.Length }) must be equal to channels count ({this.analogChannelInformations.Count})");
 			}
 			
-			if(this.analogChannelInformations.Count!=notNullAnalogs.Length){
-				throw new InvalidOperationException(string.Format("Analogs count ({0}) must be equal to channels count ({1})",
-				                                                  notNullAnalogs.Length,
-				                                                  this.analogChannelInformations.Count));
+			if(this.digitalChannelInformations.Count!= digitals.Length){
+				throw new InvalidOperationException(
+					$"Digitals count ({ digitals.Length }) must be equal to channels count ({this.digitalChannelInformations.Count})");
 			}
 			
-			if(this.digitalChannelInformations.Count!=notNullDigitals.Length){
-				throw new InvalidOperationException(string.Format("Digitals count ({0}) must be equal to channels count ({1})",
-				                                                  notNullDigitals.Length,
-				                                                  this.digitalChannelInformations.Count));
-			}
-			
-			this.samples.Add(new DataFileSample(this.samples.Count+1,timestamp,notNullAnalogs,notNullDigitals));
+			this.samples.Add(new DataFileSample(this.samples.Count+1,timestamp, analogs, digitals));
 		}
-		
+
 		/// <summary>
 		/// Support only Ascii or Binary file type
 		/// </summary>
-		public void SaveToFile(string fullPathToFile, DataFileType dataFileType=DataFileType.Binary)
+		public void SaveToFile(string fullPathToFile, bool singleFile, DataFileType dataFileType = DataFileType.Binary)
+		{
+			if (dataFileType == DataFileType.Undefined ||
+			   dataFileType == DataFileType.Binary32 ||
+			   dataFileType == DataFileType.Float32) {
+				throw new InvalidOperationException($"dataFileType={dataFileType} currently unsupported");
+			}
+
+			string path = System.IO.Path.GetDirectoryName(fullPathToFile);
+			string filenameWithoutExtention = System.IO.Path.GetFileNameWithoutExtension(fullPathToFile);
+
+			if (singleFile) {
+				using var fileStreamCFF = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionCFF, System.IO.FileMode.Create);
+				this.SaveToStreamCFGSection(fileStreamCFF, singleFile, dataFileType);
+				this.SaveToStreamDATSection(fileStreamCFF, singleFile, dataFileType);
+			}
+            else {
+				using var fileStreamCFG = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionCFG, System.IO.FileMode.Create);
+				this.SaveToStreamCFGSection(fileStreamCFG, singleFile, dataFileType);
+
+				using var fileStreamDAT = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionDAT, System.IO.FileMode.Create);
+				this.SaveToStreamDATSection(fileStreamDAT, singleFile, dataFileType);
+			}
+
+		}
+
+		public void SaveToStreamCFGSection(System.IO.Stream stream, bool singleFile, DataFileType dataFileType)
+		{
+			this.CalculateScaleFactorAB(dataFileType);
+
+			var strings = new List<string>();
+
+			if (singleFile == true) {
+				strings.Add("--- file type: CFG ---");
+			}
+
+			strings.Add(this.StationName + GlobalSettings.commaDelimiter +
+						this.DeviceId + GlobalSettings.commaDelimiter +
+						"2013");
+
+			strings.Add((this.analogChannelInformations.Count + this.digitalChannelInformations.Count).ToString() + GlobalSettings.commaDelimiter +
+						this.analogChannelInformations.Count.ToString() + "A" + GlobalSettings.commaDelimiter +
+						this.digitalChannelInformations.Count.ToString() + "D");
+
+			for (int i = 0; i < this.analogChannelInformations.Count; i++) {
+				strings.Add(this.analogChannelInformations[i].ToCFGString());
+			}
+
+			for (int i = 0; i < this.digitalChannelInformations.Count; i++) {
+				strings.Add(this.digitalChannelInformations[i].ToCFGString());
+			}
+
+			strings.Add(this.Frequency.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+			if (this.sampleRates == null || this.sampleRates.Count == 0) {
+				strings.Add("0");
+				strings.Add("0" + GlobalSettings.commaDelimiter +
+							this.samples.Count.ToString());
+			}
+			else {
+				strings.Add(this.sampleRates.Count.ToString());
+				foreach (var sampleRate in this.sampleRates) {
+					strings.Add(sampleRate.samplingFrequency.ToString() + GlobalSettings.commaDelimiter +
+								sampleRate.lastSampleNumber.ToString());
+				}
+			}
+
+			strings.Add(this.StartTime.ToString(GlobalSettings.dateTimeFormat,
+								   System.Globalization.CultureInfo.InvariantCulture));
+
+			strings.Add(this.TriggerTime.ToString(GlobalSettings.dateTimeFormat,
+								   System.Globalization.CultureInfo.InvariantCulture));
+
+			switch (dataFileType) {
+				case DataFileType.ASCII:
+					strings.Add("ASCII");
+					break;
+				case DataFileType.Binary:
+					strings.Add("BINARY");
+					break;
+				case DataFileType.Binary32:
+					strings.Add("BINARY32");
+					break;
+				case DataFileType.Float32:
+					strings.Add("FLOAT32");
+					break;
+				default:
+					throw new InvalidOperationException("Undefined data file type =" + dataFileType.ToString());
+			}
+
+			strings.Add("1.0");
+
+            if (singleFile) {
+				strings.Add("--- file type: INF ---");
+				strings.Add(GlobalSettings.newLine);
+				strings.Add("--- file type: HDR ---");
+				strings.Add(GlobalSettings.newLine);
+			}
+
+			foreach (var str in strings.SkipLast(1)) {
+				stream.Write(System.Text.Encoding.UTF8.GetBytes(str));
+				if (str != GlobalSettings.newLine) {
+					stream.Write(System.Text.Encoding.UTF8.GetBytes(GlobalSettings.newLine));
+				}
+			}
+			stream.Write(System.Text.Encoding.UTF8.GetBytes(strings[^1]));
+		}
+
+		public void SaveToStreamDATSection(System.IO.Stream stream, bool singleFile, DataFileType dataFileType)
+        {
+			var strings = new List<string>();
+            if (singleFile) {
+				if (dataFileType == DataFileType.ASCII) {
+					strings.Add("--- file type: DAT ASCII ---");
+					foreach (var sample in this.samples) {
+						strings.Add(sample.ToASCIIDAT());
+					}
+
+					foreach (var str in strings.SkipLast(1)) {
+						stream.Write(System.Text.Encoding.UTF8.GetBytes(str));
+						stream.Write(System.Text.Encoding.UTF8.GetBytes(GlobalSettings.newLine));
+					}
+					stream.Write(System.Text.Encoding.UTF8.GetBytes(strings[^1]));
+				}
+				else {//binary
+					int byteInOneSample = DataFileHandler.GetByteCountInOneSample(this.analogChannelInformations.Count, this.digitalChannelInformations.Count, dataFileType);
+					strings.Add($"--- file type: DAT BINARY: {byteInOneSample * this.samples.Count} ---");
+					foreach (var str in strings) {
+						stream.Write(System.Text.Encoding.UTF8.GetBytes(str));
+						stream.Write(System.Text.Encoding.UTF8.GetBytes(GlobalSettings.newLine));
+					}
+
+					foreach (var sample in this.samples) {
+						stream.Write(sample.ToByteDAT(dataFileType, this.analogChannelInformations));
+					}
+				}
+			}
+			else {
+				if (dataFileType == DataFileType.ASCII) {
+					foreach (var sample in this.samples) {
+						strings.Add(sample.ToASCIIDAT());
+					}
+					foreach (var str in strings.SkipLast(1)) {
+						stream.Write(System.Text.Encoding.UTF8.GetBytes(str));
+						stream.Write(System.Text.Encoding.UTF8.GetBytes(GlobalSettings.newLine));
+					}
+					stream.Write(System.Text.Encoding.UTF8.GetBytes(strings[^1]));
+				}
+				else {//binary
+					foreach (var sample in this.samples) {
+						stream.Write(sample.ToByteDAT(dataFileType, this.analogChannelInformations));
+					}					
+				}
+			}
+		}
+
+		public void SaveToFileOld(string fullPathToFile, bool singleFile, DataFileType dataFileType=DataFileType.Binary)
 		{	
 			if(dataFileType==DataFileType.Undefined ||
 			   dataFileType==DataFileType.Binary32 ||
 			   dataFileType==DataFileType.Float32){
-				throw new InvalidOperationException("Currently unsupported "+dataFileType.ToString());
-			}
-			
+				throw new InvalidOperationException($"dataFileType={dataFileType} currently unsupported");
+			}			
 			
 			string path=System.IO.Path.GetDirectoryName(fullPathToFile);
 			string filenameWithoutExtention=System.IO.Path.GetFileNameWithoutExtension(fullPathToFile);
 			
 			this.CalculateScaleFactorAB(dataFileType);
 			
-			//CFG part
+			//CFG section
 			var strings=new List<string>();
 			
 			strings.Add(this.StationName+GlobalSettings.commaDelimiter+
 			            this.DeviceId+GlobalSettings.commaDelimiter+
-			            "1999");
+			            "2013");
 			
 			strings.Add((this.analogChannelInformations.Count+this.digitalChannelInformations.Count).ToString()+GlobalSettings.commaDelimiter+
 			            this.analogChannelInformations.Count.ToString()+"A"+GlobalSettings.commaDelimiter+
@@ -142,7 +286,7 @@ namespace Wisp.Comtrade
 				strings.Add(this.digitalChannelInformations[i].ToCFGString());
 			}
 			
-			strings.Add("50.0");
+			strings.Add(this.Frequency.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			
 			if(this.sampleRates==null || this.sampleRates.Count==0){
 				strings.Add("0");				
@@ -173,25 +317,54 @@ namespace Wisp.Comtrade
 			}			
 			
 			strings.Add("1.0");
-			
-			System.IO.File.WriteAllLines(System.IO.Path.Combine(path,filenameWithoutExtention)+GlobalSettings.extentionCFG, strings);
-			
-			//DAT part
-			string dataFileFullPath=System.IO.Path.Combine(path,filenameWithoutExtention)+GlobalSettings.extentionDAT;
-			
-			if(dataFileType==DataFileType.ASCII){
-				strings=new List<string>();
-				foreach(var sample in this.samples){
-					strings.Add(sample.ToASCIIDAT());
-				}				
-				System.IO.File.WriteAllLines(dataFileFullPath, strings);
+
+			if (singleFile == false) {
+				System.IO.File.WriteAllLines(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionCFG, strings);
+
+				//DAT section
+				string dataFileFullPath = System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionDAT;
+
+				if (dataFileType == DataFileType.ASCII) {
+					strings = new List<string>();
+					foreach (var sample in this.samples) {
+						strings.Add(sample.ToASCIIDAT());
+					}
+					System.IO.File.WriteAllLines(dataFileFullPath, strings);
+				}
+				else {//binary
+					var bytes = new List<byte>();
+					foreach (var sample in this.samples) {
+						bytes.AddRange(sample.ToByteDAT(dataFileType, this.analogChannelInformations));
+					}
+					System.IO.File.WriteAllBytes(dataFileFullPath, bytes.ToArray());
+				}
 			}
-			else{
-				var bytes=new List<byte>();				
-				foreach(var sample in this.samples){
-					bytes.AddRange(sample.ToByteDAT(dataFileType,this.analogChannelInformations));
-				}				
-				System.IO.File.WriteAllBytes(dataFileFullPath, bytes.ToArray());
+			else {
+				strings.Insert(0, "--- file type: CFG ---");
+
+				strings.Add("--- file type: INF ---");
+				strings.Add(GlobalSettings.newLine);
+				strings.Add("--- file type: HDR ---");
+				strings.Add(GlobalSettings.newLine);				
+
+				if(dataFileType == DataFileType.ASCII){
+					strings.Add("--- file type: DAT ASCII ---");
+					foreach (var sample in this.samples) {
+						strings.Add(sample.ToASCIIDAT());
+					}
+				}
+                else {//binary
+					int byteInOneSample = DataFileHandler.GetByteCountInOneSample(this.analogChannelInformations.Count, this.digitalChannelInformations.Count, dataFileType);
+					strings.Add($"--- file type: DAT BINARY: {byteInOneSample * this.samples.Count} ---");
+					var bytes = new List<byte>();
+					foreach (var sample in this.samples) {
+						bytes.AddRange(sample.ToByteDAT(dataFileType, this.analogChannelInformations));
+					}
+					string cffFileFullPath = System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionCFF;
+					var aggregateResult=bytes.Aggregate(new System.Text.StringBuilder(), (System.Text.StringBuilder strBuilder, byte b) => { return strBuilder.Append(b); });
+					strings.Add(aggregateResult.ToString());
+					System.IO.File.WriteAllLines(cffFileFullPath, strings);
+				}
 			}
 		}
 		

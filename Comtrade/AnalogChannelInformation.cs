@@ -114,8 +114,7 @@ namespace Wisp.Comtrade
 			string isPrimaryText=values[12].Trim(GlobalSettings.whiteSpace);
 			if(isPrimaryText=="S" || isPrimaryText=="s"){
 				this.isPrimary=false;
-			}
-						
+			}						
 		}
 		
 		internal string ToCFGString()

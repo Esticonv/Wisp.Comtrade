@@ -6,8 +6,7 @@ namespace Wisp.Comtrade
 	/// Description of SampleRate.
 	/// </summary>
 	internal class SampleRate
-	{
-		
+	{		
 		/// <summary>
 		/// Hz
 		/// </summary>
