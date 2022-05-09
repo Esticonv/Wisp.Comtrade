@@ -21,7 +21,23 @@ namespace Wisp.Comtrade
 			get;
 			private set;
 		}
-		
+
+		/// <summary>
+		/// Units for GetTimeLine() 
+		/// </summary>
+		/// <return>true = ns, false = ms</return>
+		public bool TimeLineNanoSecondResolution
+        {			
+            get {
+				if (this.Configuration.samplingRateCount == 0 || this.Configuration.sampleRates[0].samplingFrequency == 0) {
+					return this.Configuration.timeLineNanoSecondResolution;
+				}
+				else {
+					return true;
+				}
+            }
+        }
+
 		internal RecordReader()
 		{
 		}
@@ -167,7 +183,9 @@ namespace Wisp.Comtrade
 		/// <summary>
 		/// Get common for all channels set of timestamps
 		/// </summary>
-		/// <returns>In microSeconds</returns>
+		/// <returns> If guided by samplingFreqency in nanoSecond
+		/// Else in microSecond or nanoSecond depending on cfg datatime stamp (6 or 9 Second digit)
+		/// Use TimeLineResolution property for get information about</returns>
 		public IReadOnlyList<double> GetTimeLine()
 		{
 			var list=new double[this.Data.samples.Length];
@@ -182,17 +200,16 @@ namespace Wisp.Comtrade
 			else{//use calculated by samplingFrequency
 				double currentTime=0;
 				int sampleRateIndex=0;
-				const double secondToMicrosecond=1000000;
+				const double secondToNanoSecond=1000000000;
 				for(int i=0;i<this.Data.samples.Length;i++){
 					list[i]=currentTime;
 					if(i>=this.Configuration.sampleRates[sampleRateIndex].lastSampleNumber){
 						sampleRateIndex++;
 					}				
 					
-					currentTime+=secondToMicrosecond/this.Configuration.sampleRates[sampleRateIndex].samplingFrequency;					
+					currentTime+=secondToNanoSecond/this.Configuration.sampleRates[sampleRateIndex].samplingFrequency;					
 				} 
-			}
-			
+			}			
 			return list;
 		}
 		

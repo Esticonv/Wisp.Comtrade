@@ -38,17 +38,22 @@ namespace Wisp.Comtrade
 		
 		internal int samplingRateCount=0;
 		internal List<SampleRate> sampleRates;
-		
+				
+
 		/// <summary>
 		/// Time of first value in data
+		/// Max time resolution 100ns (.net DateTime constrain)
 		/// </summary>
 		public DateTime StartTime{get;private set;}
-		
+
 		/// <summary>
 		/// Time of trigger point
+		/// Max time resolution 100ns (.net DateTime constrain)
 		/// </summary>
 		public DateTime TriggerTime{get;private set;}
-						
+
+		internal bool timeLineNanoSecondResolution;
+
 		internal DataFileType dataFileType=DataFileType.Undefined;	
 
 		internal double timeMultiplicationFactor=1.0;
@@ -102,8 +107,10 @@ namespace Wisp.Comtrade
 				strIndex+=this.samplingRateCount;
 			}
 						
-			this.StartTime=ParseDateTime(strings[strIndex++]);
-			this.TriggerTime=ParseDateTime(strings[strIndex++]);			
+			this.StartTime=ParseDateTime(strings[strIndex++], out bool nanosecond);
+			this.timeLineNanoSecondResolution=nanosecond;
+			this.TriggerTime=ParseDateTime(strings[strIndex++], out _);	
+			
 			
 			this.ParseDataFileType(strings[strIndex++]);
 			
@@ -142,13 +149,26 @@ namespace Wisp.Comtrade
 			this.samplingRateCount=Convert.ToInt32(str.Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);			
 		}
 		
-		internal static DateTime ParseDateTime(string str)
-		{	// "dd/mm/yyyy,hh:mm:ss.ssssss"			
-			DateTime.TryParseExact(str,GlobalSettings.dateTimeFormat,
-			                       System.Globalization.CultureInfo.InvariantCulture,
-			                       System.Globalization.DateTimeStyles.AllowWhiteSpaces,
-			                       out DateTime result);
-			return result;
+		internal static DateTime ParseDateTime(string str, out bool nanoSecond)
+		{
+			DateTime result;
+			if (DateTime.TryParseExact(str, GlobalSettings.dateTimeFormatForParseMicroSecond,
+								  System.Globalization.CultureInfo.InvariantCulture,
+								  System.Globalization.DateTimeStyles.AllowWhiteSpaces,
+								  out result)) {
+				nanoSecond = false;
+				return result;
+			}
+			else {
+				var strings=str.Split('.');
+				str = strings[0] + '.' + strings[1].Substring(0, 7);
+				DateTime.TryParseExact(str, GlobalSettings.dateTimeFormatForParseNanoSecond,
+								   System.Globalization.CultureInfo.InvariantCulture,
+								   System.Globalization.DateTimeStyles.AllowWhiteSpaces,
+								   out result);
+				nanoSecond = true;
+				return result;
+			}			
 		}
 		
 		void ParseDataFileType(string str)

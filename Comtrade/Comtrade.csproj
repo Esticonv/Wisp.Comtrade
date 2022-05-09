@@ -1,15 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-	<Nullable>enable</Nullable>
-    <AssemblyName>Wisp.Comtrade</AssemblyName>
-    <RootNamespace>Wisp.Comtrade</RootNamespace>
-    <Version>0.9.5</Version>
-    <Authors>Esti</Authors>
-    <Company>Esti corp</Company>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <OutputType>Library</OutputType>
+	<PropertyGroup>
+		<TargetFrameworks>net6.0</TargetFrameworks>
+		<Nullable>enable</Nullable>
+		<AssemblyName>Wisp.Comtrade</AssemblyName>
+		<RootNamespace>Wisp.Comtrade</RootNamespace>
+		<Version>0.9.5</Version>
+		<Authors>Esti</Authors>
+		<Company>Esti corp</Company>
+		<OutputType>Library</OutputType>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageTags>COMTRADE</PackageTags>
+		<Description>COMTRADE (Common Format for Trancient Data Exchange for Power Systems) reading and creating library</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReleaseNotes>Add support single file format. Add ability to work with stream</PackageReleaseNotes>
+		<Copyright>Copyright 2022</Copyright>
+		<PackageProjectUrl>https://github.com/Esticonv/Wisp.Comtrade</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

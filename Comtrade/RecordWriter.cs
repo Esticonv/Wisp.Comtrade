@@ -77,7 +77,7 @@ namespace Wisp.Comtrade
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="timestamp">micro second</param>
+		/// <param name="timestamp">In nanosecond, but can be in microsecond depending from CFG</param>
 		/// <param name="analogs"></param>
 		/// <param name="digitals"></param>
 		public void AddSample(int timestamp, double[] analogs, bool[] digitals)
@@ -165,10 +165,10 @@ namespace Wisp.Comtrade
 				}
 			}
 
-			strings.Add(this.StartTime.ToString(GlobalSettings.dateTimeFormat,
+			strings.Add(this.StartTime.ToString(GlobalSettings.dateTimeFormatForWrite,
 								   System.Globalization.CultureInfo.InvariantCulture));
 
-			strings.Add(this.TriggerTime.ToString(GlobalSettings.dateTimeFormat,
+			strings.Add(this.TriggerTime.ToString(GlobalSettings.dateTimeFormatForWrite,
 								   System.Globalization.CultureInfo.InvariantCulture));
 
 			switch (dataFileType) {
@@ -252,121 +252,7 @@ namespace Wisp.Comtrade
 					}					
 				}
 			}
-		}
-
-		public void SaveToFileOld(string fullPathToFile, bool singleFile, DataFileType dataFileType=DataFileType.Binary)
-		{	
-			if(dataFileType==DataFileType.Undefined ||
-			   dataFileType==DataFileType.Binary32 ||
-			   dataFileType==DataFileType.Float32){
-				throw new InvalidOperationException($"dataFileType={dataFileType} currently unsupported");
-			}			
-			
-			string path=System.IO.Path.GetDirectoryName(fullPathToFile);
-			string filenameWithoutExtention=System.IO.Path.GetFileNameWithoutExtension(fullPathToFile);
-			
-			this.CalculateScaleFactorAB(dataFileType);
-			
-			//CFG section
-			var strings=new List<string>();
-			
-			strings.Add(this.StationName+GlobalSettings.commaDelimiter+
-			            this.DeviceId+GlobalSettings.commaDelimiter+
-			            "2013");
-			
-			strings.Add((this.analogChannelInformations.Count+this.digitalChannelInformations.Count).ToString()+GlobalSettings.commaDelimiter+
-			            this.analogChannelInformations.Count.ToString()+"A"+GlobalSettings.commaDelimiter+
-			            this.digitalChannelInformations.Count.ToString()+"D");
-			
-			for(int i=0;i<this.analogChannelInformations.Count;i++){
-				strings.Add(this.analogChannelInformations[i].ToCFGString());
-			}
-			
-			for(int i=0;i<this.digitalChannelInformations.Count;i++){
-				strings.Add(this.digitalChannelInformations[i].ToCFGString());
-			}
-			
-			strings.Add(this.Frequency.ToString(System.Globalization.CultureInfo.InvariantCulture));
-			
-			if(this.sampleRates==null || this.sampleRates.Count==0){
-				strings.Add("0");				
-				strings.Add("0"+GlobalSettings.commaDelimiter+
-				            this.samples.Count.ToString());
-			}
-			else{
-				strings.Add(this.sampleRates.Count.ToString());
-				foreach(var sampleRate in this.sampleRates){
-					strings.Add(sampleRate.samplingFrequency.ToString()+GlobalSettings.commaDelimiter+
-					            sampleRate.lastSampleNumber.ToString());
-				}
-			}
-			
-			strings.Add(this.StartTime.ToString(GlobalSettings.dateTimeFormat,
-			                       System.Globalization.CultureInfo.InvariantCulture));
-			
-			strings.Add(this.TriggerTime.ToString(GlobalSettings.dateTimeFormat,
-			                       System.Globalization.CultureInfo.InvariantCulture));
-									
-			switch (dataFileType) {
-				case DataFileType.ASCII:    strings.Add("ASCII"); break;
-				case DataFileType.Binary:   strings.Add("BINARY");  break;
-				case DataFileType.Binary32: strings.Add("BINARY32");  break; 
-				case DataFileType.Float32:  strings.Add("FLOAT32");  break;
-				default:
-					throw new InvalidOperationException("Undefined data file type ="+dataFileType.ToString());					
-			}			
-			
-			strings.Add("1.0");
-
-			if (singleFile == false) {
-				System.IO.File.WriteAllLines(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionCFG, strings);
-
-				//DAT section
-				string dataFileFullPath = System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionDAT;
-
-				if (dataFileType == DataFileType.ASCII) {
-					strings = new List<string>();
-					foreach (var sample in this.samples) {
-						strings.Add(sample.ToASCIIDAT());
-					}
-					System.IO.File.WriteAllLines(dataFileFullPath, strings);
-				}
-				else {//binary
-					var bytes = new List<byte>();
-					foreach (var sample in this.samples) {
-						bytes.AddRange(sample.ToByteDAT(dataFileType, this.analogChannelInformations));
-					}
-					System.IO.File.WriteAllBytes(dataFileFullPath, bytes.ToArray());
-				}
-			}
-			else {
-				strings.Insert(0, "--- file type: CFG ---");
-
-				strings.Add("--- file type: INF ---");
-				strings.Add(GlobalSettings.newLine);
-				strings.Add("--- file type: HDR ---");
-				strings.Add(GlobalSettings.newLine);				
-
-				if(dataFileType == DataFileType.ASCII){
-					strings.Add("--- file type: DAT ASCII ---");
-					foreach (var sample in this.samples) {
-						strings.Add(sample.ToASCIIDAT());
-					}
-				}
-                else {//binary
-					int byteInOneSample = DataFileHandler.GetByteCountInOneSample(this.analogChannelInformations.Count, this.digitalChannelInformations.Count, dataFileType);
-					strings.Add($"--- file type: DAT BINARY: {byteInOneSample * this.samples.Count} ---");
-					var bytes = new List<byte>();
-					foreach (var sample in this.samples) {
-						bytes.AddRange(sample.ToByteDAT(dataFileType, this.analogChannelInformations));
-					}
-					string cffFileFullPath = System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionCFF;
-					var aggregateResult=bytes.Aggregate(new System.Text.StringBuilder(), (System.Text.StringBuilder strBuilder, byte b) => { return strBuilder.Append(b); });
-					strings.Add(aggregateResult.ToString());
-					System.IO.File.WriteAllLines(cffFileFullPath, strings);
-				}
-			}
-		}
+		}		
 		
 		void CalculateScaleFactorAB(DataFileType dataFileType)
 		{
