@@ -12,10 +12,10 @@ public static class GlobalSettings
 	internal const string DateTimeFormatForParseMicroSecond =	"d/M/yyyy,HH:mm:ss.ffffff";
 	internal const string DateTimeFormatForParseNanoSecond =	"d/M/yyyy,HH:mm:ss.fffffff";		
 	/// <summary>
-	/// Extentions of COMTRADE files
+	/// Extensions of COMTRADE files
 	/// </summary>
-	public const string ExtentionsForFileDialogFilter="(*.cfg;*.dat;*.cff)|*.cfg;*.dat;*.cff";
-	internal const string ExtentionCFG=".cfg";
-	internal const string ExtentionDAT=".dat";
-	internal const string ExtentionCFF=".cff";	
+	public const string ExtensionsForFileDialogFilter="(*.cfg;*.dat;*.cff)|*.cfg;*.dat;*.cff";
+    public const string ExtensionCFG=".cfg";
+    public const string ExtensionDAT=".dat";
+    public const string ExtensionCFF=".cff";	
 }

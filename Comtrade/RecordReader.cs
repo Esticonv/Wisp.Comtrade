@@ -37,10 +37,6 @@ namespace Wisp.Comtrade
 				}
             }
         }
-
-		internal RecordReader()
-		{
-		}
 		
 		/// <summary>
 		/// Read record from file
@@ -73,15 +69,15 @@ namespace Wisp.Comtrade
 			string filenameWithoutExtention=System.IO.Path.GetFileNameWithoutExtension(fullPathToFile);
 			string extention=System.IO.Path.GetExtension(fullPathToFile).ToLower();			
 
-			if(extention==GlobalSettings.ExtentionCFF){
-				using var cffFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtentionCFF, System.IO.FileMode.Open);
+			if(extention==GlobalSettings.ExtensionCFF){
+				using var cffFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtensionCFF, System.IO.FileMode.Open);
 				this.OpenFromStreamCFF(cffFileStream);
 			}
-			else if(extention==GlobalSettings.ExtentionCFG || extention==GlobalSettings.ExtentionDAT){
-				using var cfgFileStream= new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtentionCFG, System.IO.FileMode.Open);
+			else if(extention==GlobalSettings.ExtensionCFG || extention==GlobalSettings.ExtensionDAT){
+				using var cfgFileStream= new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtensionCFG, System.IO.FileMode.Open);
 				this.OpenFromStreamCFG(cfgFileStream);
 
-				using var datFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtentionDAT, System.IO.FileMode.Open);
+				using var datFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtensionDAT, System.IO.FileMode.Open);
 				this.OpenFromStreamDAT(datFileStream);
 			}
 			else{
