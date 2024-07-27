@@ -1,25 +1,31 @@
 ﻿using System;
 
-namespace Wisp.Comtrade
+namespace Wisp.Comtrade;
+
+/// <summary>
+/// Description of GlobalSettings.
+/// </summary>
+public static class GlobalSettings
 {
+	internal const char Comma=',';
+	internal const char WhiteSpace=' ';
 	/// <summary>
-	/// Description of GlobalSettings.
+	/// 'CRLF' must be used by standard as separator
 	/// </summary>
-	public static class GlobalSettings
-	{
-		internal const char commaDelimiter=',';
-		internal const char whiteSpace=' ';
-		internal const string newLine="\r\n";
-		internal const string dateTimeFormatForWrite = "dd/MM/yyyy,HH:mm:ss.fffffff";
-		internal const string dateTimeFormatForParseMicroSecond =	"d/M/yyyy,HH:mm:ss.ffffff";
-		internal const string dateTimeFormatForParseNanoSecond =	"d/M/yyyy,HH:mm:ss.fffffff";		
-		/// <summary>
-		/// Extentions of COMTRADE files
-		/// </summary>
-		public const string extentionsForFileDialogFilter="(*.cfg;*.dat;*.cff)|*.cfg;*.dat;*.cff";
-		internal const string extentionCFG=".cfg";
-		internal const string extentionDAT=".dat";
-		internal const string extentionCFF=".cff";
-		
-	}
+    internal const string NewLineWindows="\r\n";
+    private const string NewLineUnix = "\n";
+    /// <summary>
+    /// 'CRLF' must be used by standard as separator, but it occurs in different ways
+    /// </summary>
+    internal static readonly string[] NewLines=[GlobalSettings.NewLineWindows, GlobalSettings.NewLineUnix];
+	internal const string DateTimeFormatForWrite = "dd/MM/yyyy,HH:mm:ss.fffffff";
+	internal const string DateTimeFormatForParseMicroSecond =	"d/M/yyyy,HH:mm:ss.ffffff";
+	internal const string DateTimeFormatForParseNanoSecond =	"d/M/yyyy,HH:mm:ss.fffffff";		
+	/// <summary>
+	/// Extensions of COMTRADE files
+	/// </summary>
+	public const string ExtensionsForFileDialogFilter="(*.cfg;*.dat;*.cff)|*.cfg;*.dat;*.cff";
+    public const string ExtensionCFG=".cfg";
+    public const string ExtensionDAT=".dat";
+    public const string ExtensionCFF=".cff";	
 }

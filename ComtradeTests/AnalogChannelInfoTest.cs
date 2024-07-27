@@ -1,30 +1,28 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Wisp.Comtrade.Models;
+using Xunit;
 
-namespace Wisp.Comtrade
+namespace Wisp.Comtrade.Tests;
+
+public class AnalogChannelInfoTest
 {
-	[TestClass]
-	public class AnalogChannelInfoTest
-	{
-		[TestMethod]
-		public void ParserTest()
-		{
-			const string str = @"  8,F8-VN               ,N,,V     ,     0.012207,1,2,-32767,32767, 330000.0,100.0,S";
-			var channelInfo = new AnalogChannelInformation(str);
+    [Fact]
+    public void ParserTest()
+    {
+        const string str = @"  8,F8-VN               ,N,,V     ,     0.012207,1,2,-32767,32767, 330000.0,100.0,S";
+        var channelInfo = new AnalogChannel(str);
 
-			Assert.AreEqual(8, channelInfo.Index);
-			Assert.AreEqual("F8-VN", channelInfo.name);
-			Assert.AreEqual("N", channelInfo.phase);
-			Assert.AreEqual("", channelInfo.circuitComponent);
-			Assert.AreEqual("V", channelInfo.units);
-			Assert.AreEqual(0.012207d, channelInfo.a, 0.001d);
-			Assert.AreEqual(1, channelInfo.b, 0.001d);
-			Assert.AreEqual(2, channelInfo.skew, 0.001d);
-			Assert.AreEqual(-32767, channelInfo.Min, 0.001d);
-			Assert.AreEqual(32767, channelInfo.Max, 0.001d);
-			Assert.AreEqual(330000.0d, channelInfo.primary, 0.001d);
-			Assert.AreEqual(100.0, channelInfo.secondary, 0.001d);
-			Assert.AreEqual(false, channelInfo.isPrimary);
-		}		
-	}
+        Assert.Equal(8, channelInfo.Index);
+        Assert.Equal("F8-VN", channelInfo.Name);
+        Assert.Equal("N", channelInfo.Phase);
+        Assert.Equal("", channelInfo.CircuitComponent);
+        Assert.Equal("V", channelInfo.Units);
+        Assert.Equal(0.012207, channelInfo.MultiplierA);
+        Assert.Equal(1, channelInfo.MultiplierB, 0.001);
+        Assert.Equal(2, channelInfo.Skew, 0.001);
+        Assert.Equal(-32767, channelInfo.Min, 0.001);
+        Assert.Equal(32767, channelInfo.Max, 0.001);
+        Assert.Equal(330000, channelInfo.Primary, 0.001);
+        Assert.Equal(100, channelInfo.Secondary, 0.001);
+        Assert.False(channelInfo.IsPrimary);
+    }
 }

@@ -1,20 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using Wisp.Comtrade.Models;
+using Xunit;
 
-namespace Wisp.Comtrade
+namespace Wisp.Comtrade.Tests;
+
+public class SampleRateTest
 {
-	[TestClass]
-	public class SampleRateTest
-	{
-		[TestMethod]
-		public void ParseTest()
-		{
-			const string str=@" 0 ,  1360";
-			var sampleRate=new SampleRate(str);
+    [Fact]
+    public void ParseTest()
+    {
+        const string str = @" 0 ,  1360";
+        var sampleRate = new SampleRate(str);
 
-			Assert.AreEqual(0,		sampleRate.samplingFrequency, 0.1);
-			Assert.AreEqual(1360,	sampleRate.lastSampleNumber);
-		}
-	}
+        Assert.Equal(0, sampleRate.SamplingFrequency, 0.1);
+        Assert.Equal(1360, sampleRate.LastSampleNumber);
+    }
 }
-

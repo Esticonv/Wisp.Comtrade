@@ -1,27 +1,25 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Wisp.Comtrade.Models;
+using Xunit;
 
-namespace Wisp.Comtrade
+namespace Wisp.Comtrade.Tests;
+
+public class DataFileHandlerTest
 {
-	[TestClass]
-	public class DataFileHandlerTest
-	{
-		[TestMethod]
-		public void TestDigitalByteCount()
-		{
-			Assert.AreEqual(2, DataFileHandler.GetDigitalByteCount(7));
-			Assert.AreEqual(2, DataFileHandler.GetDigitalByteCount(16));
-			Assert.AreEqual(4, DataFileHandler.GetDigitalByteCount(17));
-			Assert.AreEqual(4, DataFileHandler.GetDigitalByteCount(32));		
-		}
-		
-		[TestMethod]
-		public void TestByteCount()
-		{
-			Assert.AreEqual(12, DataFileHandler.GetByteCountInOneSample(1, 1, DataFileType.Binary));
-			Assert.AreEqual(22, DataFileHandler.GetByteCountInOneSample(5, 17, DataFileType.Binary));
-			Assert.AreEqual(32, DataFileHandler.GetByteCountInOneSample(5, 17, DataFileType.Float32));
-			Assert.AreEqual(32, DataFileHandler.GetByteCountInOneSample(5, 17, DataFileType.Binary32));		
-		}
-	}
-}
+    [Fact]
+    public void TestByteCount()
+    {
+        Assert.Equal(12, DataFileHandler.GetByteCountInOneSample(1, 1, DataFileType.Binary));
+        Assert.Equal(22, DataFileHandler.GetByteCountInOneSample(5, 17, DataFileType.Binary));
+        Assert.Equal(32, DataFileHandler.GetByteCountInOneSample(5, 17, DataFileType.Float32));
+        Assert.Equal(32, DataFileHandler.GetByteCountInOneSample(5, 17, DataFileType.Binary32));
+    }
 
+    [Fact]
+    public void TestDigitalByteCount()
+    {
+        Assert.Equal(2, DataFileHandler.GetDigitalByteCount(7));
+        Assert.Equal(2, DataFileHandler.GetDigitalByteCount(16));
+        Assert.Equal(4, DataFileHandler.GetDigitalByteCount(17));
+        Assert.Equal(4, DataFileHandler.GetDigitalByteCount(32));
+    }
+}

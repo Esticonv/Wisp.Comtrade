@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Wisp.Comtrade.Models;
 
 namespace Wisp.Comtrade
 {
-	/// <summary>
-	/// Class for parsing comtrade files
-	/// </summary>
-	public class RecordReader
+    /// <summary>
+    /// Class for parsing comtrade files
+    /// </summary>
+    public class RecordReader
 	{
 		/// <summary>
 		/// Get configuration for loaded record
@@ -29,18 +30,14 @@ namespace Wisp.Comtrade
 		public bool TimeLineNanoSecondResolution
         {			
             get {
-				if (this.Configuration.samplingRateCount == 0 || this.Configuration.sampleRates[0].samplingFrequency == 0) {
-					return this.Configuration.timeLineNanoSecondResolution;
+				if (this.Configuration.SamplingRateCount == 0 || this.Configuration.SampleRates[0].SamplingFrequency == 0) {
+					return this.Configuration.TimeLineNanoSecondResolution;
 				}
 				else {
 					return true;
 				}
             }
         }
-
-		internal RecordReader()
-		{
-		}
 		
 		/// <summary>
 		/// Read record from file
@@ -73,15 +70,15 @@ namespace Wisp.Comtrade
 			string filenameWithoutExtention=System.IO.Path.GetFileNameWithoutExtension(fullPathToFile);
 			string extention=System.IO.Path.GetExtension(fullPathToFile).ToLower();			
 
-			if(extention==GlobalSettings.extentionCFF){
-				using var cffFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionCFF, System.IO.FileMode.Open);
+			if(extention==GlobalSettings.ExtensionCFF){
+				using var cffFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtensionCFF, System.IO.FileMode.Open);
 				this.OpenFromStreamCFF(cffFileStream);
 			}
-			else if(extention==GlobalSettings.extentionCFG || extention==GlobalSettings.extentionDAT){
-				using var cfgFileStream= new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionCFG, System.IO.FileMode.Open);
+			else if(extention==GlobalSettings.ExtensionCFG || extention==GlobalSettings.ExtensionDAT){
+				using var cfgFileStream= new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtensionCFG, System.IO.FileMode.Open);
 				this.OpenFromStreamCFG(cfgFileStream);
 
-				using var datFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionDAT, System.IO.FileMode.Open);
+				using var datFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtensionDAT, System.IO.FileMode.Open);
 				this.OpenFromStreamDAT(datFileStream);
 			}
 			else{
@@ -98,7 +95,7 @@ namespace Wisp.Comtrade
 				loadedAsListByteFile.AddRange(buffer.SkipLast(buffer.Length - readedBytes));
 			}
 			var cfgSection = System.Text.Encoding.UTF8.GetString(loadedAsListByteFile.ToArray())
-				.Split(new string[]{ GlobalSettings.newLine, "\n"}, StringSplitOptions.None);
+				.Split(GlobalSettings.NewLines, StringSplitOptions.None);
 			this.Configuration = new ConfigurationHandler(cfgSection.ToArray());
 		}
 
@@ -111,9 +108,9 @@ namespace Wisp.Comtrade
 				loadedAsListByteFile.AddRange(buffer.SkipLast(buffer.Length - readedBytes));
 			}
 
-			if (this.Configuration.dataFileType == DataFileType.ASCII) {
+			if (this.Configuration.DataFileType == DataFileType.ASCII) {
 				var datSection = System.Text.Encoding.UTF8.GetString(loadedAsListByteFile.ToArray())
-					.Split(new string[] { GlobalSettings.newLine, "\n" }, StringSplitOptions.None);
+					.Split(GlobalSettings.NewLines, StringSplitOptions.None);
 				this.Data = new DataFileHandler(datSection.ToArray(), this.Configuration);
 			}
 			else {
@@ -151,7 +148,7 @@ namespace Wisp.Comtrade
 			}
 
 			var cffFileStrings = System.Text.Encoding.UTF8.GetString(loadedAsArrayByte, 0, indexOfDataSection)
-				.Split(new string[] { GlobalSettings.newLine, "\n" }, StringSplitOptions.None);
+				.Split(GlobalSettings.NewLines, StringSplitOptions.None);
 
 			int indexInCff = 0;
 			if (!cffFileStrings[indexInCff].Contains("type: CFG")) {
@@ -168,9 +165,9 @@ namespace Wisp.Comtrade
 			}
 
 			this.Configuration = new ConfigurationHandler(cfgSection.ToArray());
-			if (this.Configuration.dataFileType == DataFileType.ASCII) {
+			if (this.Configuration.DataFileType == DataFileType.ASCII) {
 				var dataSectionStr=System.Text.Encoding.UTF8.GetString(loadedAsArrayByte, indexOfDataSection, loadedAsArrayByte.Length - indexOfDataSection)
-					.Split(new string[] { GlobalSettings.newLine, "\n" }, StringSplitOptions.None);
+					.Split(GlobalSettings.NewLines, StringSplitOptions.None);
 
 				this.Data = new DataFileHandler(dataSectionStr.ToArray(), this.Configuration);
 			}
@@ -188,26 +185,26 @@ namespace Wisp.Comtrade
 		/// Use TimeLineResolution property for get information about</returns>
 		public IReadOnlyList<double> GetTimeLine()
 		{
-			var list=new double[this.Data.samples.Length];
+			var list=new double[this.Data.Samples.Length];
 			
-			if(this.Configuration.samplingRateCount == 0 || 
-			   (Math.Abs(this.Configuration.sampleRates[0].samplingFrequency) < 0.01d)){
+			if(this.Configuration.SamplingRateCount == 0 || 
+			   (Math.Abs(this.Configuration.SampleRates[0].SamplingFrequency) < 0.01d)){
 				//use timestamps in samples
-				for(int i=0;i<this.Data.samples.Length;i++){
-					list[i]=this.Data.samples[i].timestamp*this.Configuration.timeMultiplicationFactor;
+				for(int i=0;i<this.Data.Samples.Length;i++){
+					list[i]=this.Data.Samples[i].Timestamp*this.Configuration.TimeMultiplicationFactor;
 				}
 			}
 			else{//use calculated by samplingFrequency
 				double currentTime=0;
 				int sampleRateIndex=0;
 				const double secondToNanoSecond=1000000000;
-				for(int i=0;i<this.Data.samples.Length;i++){
+				for(int i=0;i<this.Data.Samples.Length;i++){
 					list[i]=currentTime;
-					if(i>=this.Configuration.sampleRates[sampleRateIndex].lastSampleNumber){
+					if(i>=this.Configuration.SampleRates[sampleRateIndex].LastSampleNumber){
 						sampleRateIndex++;
 					}				
 					
-					currentTime+=secondToNanoSecond/this.Configuration.sampleRates[sampleRateIndex].samplingFrequency;					
+					currentTime+=secondToNanoSecond/this.Configuration.SampleRates[sampleRateIndex].SamplingFrequency;					
 				} 
 			}			
 			return list;
@@ -219,15 +216,15 @@ namespace Wisp.Comtrade
 		public IReadOnlyList<double> GetAnalogPrimaryChannel(int channelNumber)
 		{
 			double Kt=1;
-			if(this.Configuration.AnalogChannelInformations[channelNumber].isPrimary==false){
-				Kt=this.Configuration.AnalogChannelInformations[channelNumber].primary/
-					this.Configuration.AnalogChannelInformations[channelNumber].secondary;
+			if(this.Configuration.AnalogChannelInformationList[channelNumber].IsPrimary==false){
+				Kt=this.Configuration.AnalogChannelInformationList[channelNumber].Primary/
+					this.Configuration.AnalogChannelInformationList[channelNumber].Secondary;
 			}
 			
-			var list=new double[this.Data.samples.Length];
-			for(int i=0;i<this.Data.samples.Length;i++){				
-				list[i]=(this.Data.samples[i].analogs[channelNumber]*this.Configuration.AnalogChannelInformations[channelNumber].a+
-				         this.Configuration.AnalogChannelInformations[channelNumber].b)*Kt;
+			var list=new double[this.Data.Samples.Length];
+			for(int i=0;i<this.Data.Samples.Length;i++){				
+				list[i]=(this.Data.Samples[i].AnalogValues[channelNumber]*this.Configuration.AnalogChannelInformationList[channelNumber].MultiplierA+
+				         this.Configuration.AnalogChannelInformationList[channelNumber].MultiplierB)*Kt;
 			}
 			return list;
 		}
@@ -237,9 +234,9 @@ namespace Wisp.Comtrade
 		/// </summary>
 		public IReadOnlyList<bool> GetDigitalChannel(int channelNumber)
 		{
-			var list=new bool[this.Data.samples.Length];
-			for(int i=0;i<this.Data.samples.Length;i++){
-				list[i]=this.Data.samples[i].digitals[channelNumber];
+			var list=new bool[this.Data.Samples.Length];
+			for(int i=0;i<this.Data.Samples.Length;i++){
+				list[i]=this.Data.Samples[i].DigitalValues[channelNumber];
 			}
 			return list;
 		}		
