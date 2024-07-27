@@ -76,7 +76,7 @@ public class RecordWriter
 
     /// <summary>
     /// </summary>
-    /// <param name="timestamp">In nanosecond, but can be in microsecond depending on CFG</param>
+    /// <param name="timestamp">In microsecond or nanosecond depending on confgiruation</param>
     /// <param name="analogValues"></param>
     /// <param name="digitalValues"></param>
     public void AddSample(int timestamp, double[] analogValues, bool[] digitalValues)
@@ -191,16 +191,16 @@ public class RecordWriter
 
         if (singleFile) {
             strings.Add("--- file type: INF ---");
-            strings.Add(GlobalSettings.NewLine);
+            strings.Add(GlobalSettings.NewLineWindows);
             strings.Add("--- file type: HDR ---");
-            strings.Add(GlobalSettings.NewLine);
+            strings.Add(GlobalSettings.NewLineWindows);
         }
 
         foreach (var str in strings.SkipLast(1)) {
             stream.Write(Encoding.UTF8.GetBytes(str));
 
-            if (str != GlobalSettings.NewLine) {
-                stream.Write(Encoding.UTF8.GetBytes(GlobalSettings.NewLine));
+            if (str != GlobalSettings.NewLineWindows) {
+                stream.Write(Encoding.UTF8.GetBytes(GlobalSettings.NewLineWindows));
             }
         }
 
@@ -221,7 +221,7 @@ public class RecordWriter
 
                 foreach (var str in strings.SkipLast(1)) {
                     stream.Write(Encoding.UTF8.GetBytes(str));
-                    stream.Write(Encoding.UTF8.GetBytes(GlobalSettings.NewLine));
+                    stream.Write(Encoding.UTF8.GetBytes(GlobalSettings.NewLineWindows));
                 }
 
                 stream.Write(Encoding.UTF8.GetBytes(strings[^1]));
@@ -233,7 +233,7 @@ public class RecordWriter
 
                 foreach (var str in strings) {
                     stream.Write(Encoding.UTF8.GetBytes(str));
-                    stream.Write(Encoding.UTF8.GetBytes(GlobalSettings.NewLine));
+                    stream.Write(Encoding.UTF8.GetBytes(GlobalSettings.NewLineWindows));
                 }
 
                 foreach (var sample in _samples) {
@@ -249,7 +249,7 @@ public class RecordWriter
 
                 foreach (var str in strings.SkipLast(1)) {
                     stream.Write(Encoding.UTF8.GetBytes(str));
-                    stream.Write(Encoding.UTF8.GetBytes(GlobalSettings.NewLine));
+                    stream.Write(Encoding.UTF8.GetBytes(GlobalSettings.NewLineWindows));
                 }
 
                 stream.Write(Encoding.UTF8.GetBytes(strings[^1]));

@@ -1,53 +1,42 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using System.Reflection;
+using Xunit;
 
-namespace Wisp.Comtrade
+namespace Wisp.Comtrade.Tests;
+
+public class RecordReaderTest
 {
-	[TestClass]
-	public class RecordReaderTest
-	{
-		const string rootYandexDiskDirectory = RecordWriterTest.rootYandexDiskDirectory;
+    private readonly string _pathToPojectRoot;
 
-		/// <summary>
-		/// Success only on maintainer machine 
-		/// </summary>
-		[TestMethod]		
-		public void TestOpenFile()
-		{	
-			RecordReader record;
-			record=new RecordReader(rootYandexDiskDirectory + @"Oscillogram\Undefined_A\1.dat");
-			record.GetTimeLine();
-			record.GetAnalogPrimaryChannel(0);
-			record.GetDigitalChannel(0);
-			
-			record=new RecordReader(rootYandexDiskDirectory + @"Oscillogram\LossOfSyncronism_B\ALAR.DAT");
-			record.GetTimeLine();
-			record.GetAnalogPrimaryChannel(0);
-			record.GetDigitalChannel(0);
-			
-			record=new RecordReader(rootYandexDiskDirectory + @"Oscillogram\Ground Fault_B\3.cFg");
-			record.GetTimeLine();
-			record.GetAnalogPrimaryChannel(0);
-			record.GetDigitalChannel(0);
-			
-			record=new RecordReader(rootYandexDiskDirectory + @"Oscillogram\Ground Fault_B\3.cfg");	
-			
-			record=new RecordReader(rootYandexDiskDirectory + @"Oscillogram\Sepam_StopingGenerator_B\1.DAT");
-			record.GetTimeLine();
-			record.GetAnalogPrimaryChannel(0);
-			record.GetDigitalChannel(0);	
+    public RecordReaderTest()
+    {
+        string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+        var projectRoot = System.IO.Directory.GetParent(assemblyLocation)!.Parent!.Parent!.Parent!;
+        _pathToPojectRoot = projectRoot.FullName;
+    }
 
-			record=new RecordReader(rootYandexDiskDirectory + @"Oscillogram\Undefined_2013_B32\000.DAT");
-			record.GetTimeLine();
-			record.GetAnalogPrimaryChannel(0);
-			record.GetDigitalChannel(0);			
-		}
-		
-		[TestMethod]
-		public void TestNotSupportedExtentions()
-		{
-			Assert.ThrowsException<InvalidOperationException>(() => new RecordReader("notComtradeExtentions.trr"));
-		}
-	}
+    [Fact]
+    public void TestNotSupportedExtensions()
+    {
+        Assert.Throws<InvalidOperationException>(() => new RecordReader("notComtradeExtensions.trr"));
+    }
+
+    [Theory]
+    [InlineData("\\ExampleSet1\\", "sample_ascii.dat")]
+    [InlineData("\\ExampleSet1\\", "sample_bin.DAT")]
+    [InlineData("\\ExampleSet1\\", "sample_ascii.cFg")]
+    [InlineData("\\ExampleSet1\\", "sample_bin.cfg")]
+
+    [InlineData("\\ExampleSet2\\", "1.dat")]
+    [InlineData("\\ExampleSet2\\", "2.DAT")]
+    [InlineData("\\ExampleSet2\\", "3.cFg")]
+    [InlineData("\\ExampleSet2\\", "4.cfg")]
+    [InlineData("\\ExampleSet2\\", "5.cfg")]
+    public void TestOpenFile(string path, string fileName)
+    {
+        var record = new RecordReader(_pathToPojectRoot + path + fileName);
+        record.GetTimeLine();
+        record.GetAnalogPrimaryChannel(0);
+        record.GetDigitalChannel(0);
+    }
 }
-

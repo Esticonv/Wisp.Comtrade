@@ -94,7 +94,7 @@ namespace Wisp.Comtrade
 				loadedAsListByteFile.AddRange(buffer.SkipLast(buffer.Length - readedBytes));
 			}
 			var cfgSection = System.Text.Encoding.UTF8.GetString(loadedAsListByteFile.ToArray())
-				.Split(new string[]{ GlobalSettings.NewLine, "\n"}, StringSplitOptions.None);
+				.Split(GlobalSettings.NewLines, StringSplitOptions.None);
 			this.Configuration = new ConfigurationHandler(cfgSection.ToArray());
 		}
 
@@ -109,7 +109,7 @@ namespace Wisp.Comtrade
 
 			if (this.Configuration.DataFileType == DataFileType.ASCII) {
 				var datSection = System.Text.Encoding.UTF8.GetString(loadedAsListByteFile.ToArray())
-					.Split(new string[] { GlobalSettings.NewLine, "\n" }, StringSplitOptions.None);
+					.Split(GlobalSettings.NewLines, StringSplitOptions.None);
 				this.Data = new DataFileHandler(datSection.ToArray(), this.Configuration);
 			}
 			else {
@@ -147,7 +147,7 @@ namespace Wisp.Comtrade
 			}
 
 			var cffFileStrings = System.Text.Encoding.UTF8.GetString(loadedAsArrayByte, 0, indexOfDataSection)
-				.Split(new string[] { GlobalSettings.NewLine, "\n" }, StringSplitOptions.None);
+				.Split(GlobalSettings.NewLines, StringSplitOptions.None);
 
 			int indexInCff = 0;
 			if (!cffFileStrings[indexInCff].Contains("type: CFG")) {
@@ -166,7 +166,7 @@ namespace Wisp.Comtrade
 			this.Configuration = new ConfigurationHandler(cfgSection.ToArray());
 			if (this.Configuration.DataFileType == DataFileType.ASCII) {
 				var dataSectionStr=System.Text.Encoding.UTF8.GetString(loadedAsArrayByte, indexOfDataSection, loadedAsArrayByte.Length - indexOfDataSection)
-					.Split(new string[] { GlobalSettings.NewLine, "\n" }, StringSplitOptions.None);
+					.Split(GlobalSettings.NewLines, StringSplitOptions.None);
 
 				this.Data = new DataFileHandler(dataSectionStr.ToArray(), this.Configuration);
 			}
