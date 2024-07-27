@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<AssemblyName>Wisp.Comtrade</AssemblyName>
 		<RootNamespace>Wisp.Comtrade</RootNamespace>
@@ -9,12 +9,13 @@
 		<Authors>Esti</Authors>
 		<Company>Esti corp</Company>
 		<OutputType>Library</OutputType>
+		<Configurations>Debug;Release</Configurations>
 	</PropertyGroup>
 	
 	<PropertyGroup>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageTags>COMTRADE</PackageTags>
-		<Description>COMTRADE (Common Format for Trancient Data Exchange for Power Systems) reading and creating library</Description>
+		<Description>COMTRADE (Common Format for Transient Data Exchange for Power Systems) reading and creating library</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReleaseNotes>Add support single file format. Add ability to work with stream</PackageReleaseNotes>
 		<Copyright>Copyright 2022</Copyright>
