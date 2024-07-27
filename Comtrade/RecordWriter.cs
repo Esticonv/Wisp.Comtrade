@@ -110,15 +110,15 @@ namespace Wisp.Comtrade
 			string filenameWithoutExtention = System.IO.Path.GetFileNameWithoutExtension(fullPathToFile);
 
 			if (singleFile) {
-				using var fileStreamCFF = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionCFF, System.IO.FileMode.Create);
+				using var fileStreamCFF = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtentionCFF, System.IO.FileMode.Create);
 				this.SaveToStreamCFGSection(fileStreamCFF, singleFile, dataFileType);
 				this.SaveToStreamDATSection(fileStreamCFF, singleFile, dataFileType);
 			}
             else {
-				using var fileStreamCFG = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionCFG, System.IO.FileMode.Create);
+				using var fileStreamCFG = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtentionCFG, System.IO.FileMode.Create);
 				this.SaveToStreamCFGSection(fileStreamCFG, singleFile, dataFileType);
 
-				using var fileStreamDAT = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionDAT, System.IO.FileMode.Create);
+				using var fileStreamDAT = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtentionDAT, System.IO.FileMode.Create);
 				this.SaveToStreamDATSection(fileStreamDAT, singleFile, dataFileType);
 			}
 
@@ -134,12 +134,12 @@ namespace Wisp.Comtrade
 				strings.Add("--- file type: CFG ---");
 			}
 
-			strings.Add(this.StationName + GlobalSettings.commaDelimiter +
-						this.DeviceId + GlobalSettings.commaDelimiter +
+			strings.Add(this.StationName + GlobalSettings.Comma +
+						this.DeviceId + GlobalSettings.Comma +
 						"2013");
 
-			strings.Add((this.analogChannelInformations.Count + this.digitalChannelInformations.Count).ToString() + GlobalSettings.commaDelimiter +
-						this.analogChannelInformations.Count.ToString() + "A" + GlobalSettings.commaDelimiter +
+			strings.Add((this.analogChannelInformations.Count + this.digitalChannelInformations.Count).ToString() + GlobalSettings.Comma +
+						this.analogChannelInformations.Count.ToString() + "A" + GlobalSettings.Comma +
 						this.digitalChannelInformations.Count.ToString() + "D");
 
 			for (int i = 0; i < this.analogChannelInformations.Count; i++) {
@@ -154,21 +154,21 @@ namespace Wisp.Comtrade
 
 			if (this.sampleRates == null || this.sampleRates.Count == 0) {
 				strings.Add("0");
-				strings.Add("0" + GlobalSettings.commaDelimiter +
+				strings.Add("0" + GlobalSettings.Comma +
 							this.samples.Count.ToString());
 			}
 			else {
 				strings.Add(this.sampleRates.Count.ToString());
 				foreach (var sampleRate in this.sampleRates) {
-					strings.Add(sampleRate.samplingFrequency.ToString() + GlobalSettings.commaDelimiter +
+					strings.Add(sampleRate.samplingFrequency.ToString() + GlobalSettings.Comma +
 								sampleRate.lastSampleNumber.ToString());
 				}
 			}
 
-			strings.Add(this.StartTime.ToString(GlobalSettings.dateTimeFormatForWrite,
+			strings.Add(this.StartTime.ToString(GlobalSettings.DateTimeFormatForWrite,
 								   System.Globalization.CultureInfo.InvariantCulture));
 
-			strings.Add(this.TriggerTime.ToString(GlobalSettings.dateTimeFormatForWrite,
+			strings.Add(this.TriggerTime.ToString(GlobalSettings.DateTimeFormatForWrite,
 								   System.Globalization.CultureInfo.InvariantCulture));
 
 			switch (dataFileType) {
@@ -192,15 +192,15 @@ namespace Wisp.Comtrade
 
             if (singleFile) {
 				strings.Add("--- file type: INF ---");
-				strings.Add(GlobalSettings.newLine);
+				strings.Add(GlobalSettings.NewLine);
 				strings.Add("--- file type: HDR ---");
-				strings.Add(GlobalSettings.newLine);
+				strings.Add(GlobalSettings.NewLine);
 			}
 
 			foreach (var str in strings.SkipLast(1)) {
 				stream.Write(System.Text.Encoding.UTF8.GetBytes(str));
-				if (str != GlobalSettings.newLine) {
-					stream.Write(System.Text.Encoding.UTF8.GetBytes(GlobalSettings.newLine));
+				if (str != GlobalSettings.NewLine) {
+					stream.Write(System.Text.Encoding.UTF8.GetBytes(GlobalSettings.NewLine));
 				}
 			}
 			stream.Write(System.Text.Encoding.UTF8.GetBytes(strings[^1]));
@@ -218,7 +218,7 @@ namespace Wisp.Comtrade
 
 					foreach (var str in strings.SkipLast(1)) {
 						stream.Write(System.Text.Encoding.UTF8.GetBytes(str));
-						stream.Write(System.Text.Encoding.UTF8.GetBytes(GlobalSettings.newLine));
+						stream.Write(System.Text.Encoding.UTF8.GetBytes(GlobalSettings.NewLine));
 					}
 					stream.Write(System.Text.Encoding.UTF8.GetBytes(strings[^1]));
 				}
@@ -227,7 +227,7 @@ namespace Wisp.Comtrade
 					strings.Add($"--- file type: DAT BINARY: {byteInOneSample * this.samples.Count} ---");
 					foreach (var str in strings) {
 						stream.Write(System.Text.Encoding.UTF8.GetBytes(str));
-						stream.Write(System.Text.Encoding.UTF8.GetBytes(GlobalSettings.newLine));
+						stream.Write(System.Text.Encoding.UTF8.GetBytes(GlobalSettings.NewLine));
 					}
 
 					foreach (var sample in this.samples) {
@@ -242,7 +242,7 @@ namespace Wisp.Comtrade
 					}
 					foreach (var str in strings.SkipLast(1)) {
 						stream.Write(System.Text.Encoding.UTF8.GetBytes(str));
-						stream.Write(System.Text.Encoding.UTF8.GetBytes(GlobalSettings.newLine));
+						stream.Write(System.Text.Encoding.UTF8.GetBytes(GlobalSettings.NewLine));
 					}
 					stream.Write(System.Text.Encoding.UTF8.GetBytes(strings[^1]));
 				}
@@ -259,11 +259,11 @@ namespace Wisp.Comtrade
 			if(dataFileType==DataFileType.Binary ||
 			   dataFileType==DataFileType.Binary32){//i make it same, but in theory, bin32 can be more precise			
 				for(int i=0;i<this.analogChannelInformations.Count;i++){
-					double min=this.samples.Min(x => x.analogs[i]);
-					double max=this.samples.Max(x => x.analogs[i]);					
-					this.analogChannelInformations[i].b=(max+min)/2.0;
+					double min=this.samples.Min(x => x.AnalogValues[i]);
+					double max=this.samples.Max(x => x.AnalogValues[i]);					
+					this.analogChannelInformations[i].MultiplierB=(max+min)/2.0;
 					if(max!=min){
-						this.analogChannelInformations[i].a=(max-min)/32767.0;//65536						
+						this.analogChannelInformations[i].MultiplierA = (max-min)/32767.0;//65536						
 					}					
 					this.analogChannelInformations[i].Min=-32767;//by standart 1999
 					this.analogChannelInformations[i].Max=32767;//by standart 1999					

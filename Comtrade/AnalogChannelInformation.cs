@@ -1,137 +1,137 @@
 ﻿using System;
+using System.Globalization;
 
-namespace Wisp.Comtrade
+namespace Wisp.Comtrade;
+
+public class AnalogChannelInformation
 {
-	/// <summary>
-	/// Description of AnalogChannelInformation.
-	/// </summary>
-	public class AnalogChannelInformation
-	{		
-		int index=0;
-		
-		/// <summary>
-		/// According STD for COMTRADE
-		/// </summary>
-		public int Index{
-			get{
-				return index;
-			}
-			internal set{
-				this.index=value;
-			}
-		}		
-		
-		/// <summary>
-		/// According STD for COMTRADE
-		/// </summary>
-		readonly public string name=string.Empty;
-		/// <summary>
-		/// According STD for COMTRADE
-		/// </summary>
-		readonly public string phase=string.Empty;
-		/// <summary>
-		/// According STD for COMTRADE
-		/// </summary>
-		readonly public string circuitComponent=string.Empty;
-		/// <summary>
-		/// According STD for COMTRADE
-		/// </summary>
-		readonly public string units="NONE";
-		
-		internal double a=1.0;
-				
-		internal double b=0;
-		
-		readonly internal double skew=0;
-		
-		
-		double min=float.MinValue;
-		
-		/// <summary>
-		/// According STD for COMTRADE
-		/// </summary>
-		public double Min
-		{
-			get{
-				return this.min;
-			}
-			internal set{
-				this.min=value;
-			}			
-		}		
-		
-		double max=float.MaxValue;
-		/// <summary>
-		/// According STD for COMTRADE
-		/// </summary>
-		public double Max
-		{
-			get{
-				return this.max;
-			}
-			internal set{
-				this.max=value;
-			}			
-		}
-		
-		/// <summary>
-		/// According STD for COMTRADE
-		/// </summary>
-		readonly public double primary=1.0;
-		/// <summary>
-		/// According STD for COMTRADE
-		/// </summary>
-		readonly public double secondary=1.0;
-		
-		readonly internal bool isPrimary=true;	
-		
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public AnalogChannelInformation(string name, string phase)
-		{
-			this.name=name;
-			this.phase=phase;
-		}
-		
-		internal AnalogChannelInformation(string analogLine)
-		{
-			var values=analogLine.Split(GlobalSettings.commaDelimiter);
-			
-			this.index=Convert.ToInt32(values[0].Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);
-			this.name=values[1].Trim(GlobalSettings.whiteSpace);
-			this.phase=values[2].Trim(GlobalSettings.whiteSpace);
-			this.circuitComponent=values[3].Trim(GlobalSettings.whiteSpace);
-			this.units=values[4].Trim(GlobalSettings.whiteSpace);
-			this.a=Convert.ToDouble(values[5].Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);
-			this.b=Convert.ToDouble(values[6].Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);			
-			this.skew=Convert.ToDouble(values[7].Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);
-			this.min=Convert.ToDouble(values[8].Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);
-			this.max=Convert.ToDouble(values[9].Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);
-			this.primary=Convert.ToDouble(values[10].Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);
-			this.secondary=Convert.ToDouble(values[11].Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);
-			
-			string isPrimaryText=values[12].Trim(GlobalSettings.whiteSpace);
-			if(isPrimaryText=="S" || isPrimaryText=="s"){
-				this.isPrimary=false;
-			}						
-		}
-		
-		internal string ToCFGString()
-		{
-			return this.Index.ToString()+GlobalSettings.commaDelimiter+
-					this.name+GlobalSettings.commaDelimiter+
-					this.phase+GlobalSettings.commaDelimiter+
-					this.circuitComponent+GlobalSettings.commaDelimiter+
-					this.units+GlobalSettings.commaDelimiter+
-					this.a.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
-					this.b.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
-					this.skew.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
-					this.min.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
-					this.max.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
-					this.primary.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
-					this.secondary.ToString(System.Globalization.CultureInfo.InvariantCulture)+GlobalSettings.commaDelimiter+
-					(this.isPrimary ? "P" : "S");
-		}
-	}
+    /// <summary>
+    ///     Parameter 'PS'
+    ///     Indicates whether the converted data is in primary (P) or secondary (S) values
+    /// </summary>
+    public readonly bool IsPrimary = true;
+
+    /// <summary>
+    ///     Parameter 'primary'
+    ///     Channel voltage or current transformer ratio primary factor
+    /// </summary>
+    public readonly double Primary = 1.0;
+
+    /// <summary>
+    ///     Parameter 'secondary'
+    ///     Channel voltage or current transformer ratio secondary factor
+    /// </summary>
+    public readonly double Secondary = 1.0;
+
+    public AnalogChannelInformation(string name, string phase)
+    {
+        Name = name;
+        Phase = phase;
+    }
+
+    public AnalogChannelInformation(string analogLine)
+    {
+        //TODO: Check if line length == 13;
+        var values = analogLine.Split(GlobalSettings.Comma);
+
+        Index = Convert.ToInt32(values[0].Trim(), CultureInfo.InvariantCulture);
+        Name = values[1].Trim();
+        Phase = values[2].Trim();
+        CircuitComponent = values[3].Trim();
+        Units = values[4].Trim();
+        MultiplierA = Convert.ToDouble(values[5].Trim(), CultureInfo.InvariantCulture);
+        MultiplierB = Convert.ToDouble(values[6].Trim(), CultureInfo.InvariantCulture);
+        Skew = Convert.ToDouble(values[7].Trim(), CultureInfo.InvariantCulture);
+        Min = Convert.ToDouble(values[8].Trim(), CultureInfo.InvariantCulture);
+        Max = Convert.ToDouble(values[9].Trim(), CultureInfo.InvariantCulture);
+        Primary = Convert.ToDouble(values[10].Trim(), CultureInfo.InvariantCulture);
+        Secondary = Convert.ToDouble(values[11].Trim(), CultureInfo.InvariantCulture);
+
+        var isPrimaryText = values[12].Trim();
+
+        if (isPrimaryText.ToLower().Equals("s")) {
+            IsPrimary = false;
+        }
+    }
+
+    /// <summary>
+    ///     Parameter 'An'
+    ///     Analog channel index number
+    /// </summary>
+    public int Index { get; internal set; }
+
+    /// <summary>
+    ///     Parameter 'ch_id'
+    ///     Channel identifier
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    ///     Parameter 'ph'
+    ///     Channel phase identification
+    /// </summary>
+    public string Phase { get; }
+
+    /// <summary>
+    ///     Parameter 'ccbm'
+    ///     Circuit component being monitored
+    /// </summary>
+    public string CircuitComponent { get; } = string.Empty;
+
+    /// <summary>
+    ///     Parameter 'uu'
+    ///     Channel units (when data has been converted using channel conversion factor)
+    /// </summary>
+    public string Units { get; } = "NONE";
+
+    /// <summary>
+    ///     Parameter 'a'
+    ///     Channel multiplier (channel conversion factor)
+    /// </summary>
+    public double MultiplierA { get; set; } = 1.0;
+
+    /// <summary>
+    ///     Parameter 'b'
+    ///     Channel offset adder (channel conversion factor)
+    /// </summary>
+    public double MultiplierB { get; set; }
+
+    /// <summary>
+    ///     Parameter 'skew'
+    ///     Channel time skew (in microseconds) from the start of sample period.
+    /// </summary>
+    public double Skew { get; }
+
+    /// <summary>
+    ///     Parameter 'min'
+    ///     Channel minimum data range value
+    /// </summary>
+    public double Min { get; internal set; } = float.MinValue;
+
+    /// <summary>
+    ///     Parameter 'max'
+    ///     Channel maximum data range value
+    /// </summary>
+    public double Max { get; internal set; } = float.MaxValue;
+
+    internal string ToCFGString()
+    {
+        var cfgValues = new[] {
+            Index.ToString(),
+            Name,
+            Phase,
+            CircuitComponent,
+            Units,
+            MultiplierA.ToString(CultureInfo.InvariantCulture),
+            MultiplierB.ToString(CultureInfo.InvariantCulture),
+            Skew.ToString(CultureInfo.InvariantCulture),
+            Min.ToString(CultureInfo.InvariantCulture),
+            Max.ToString(CultureInfo.InvariantCulture),
+            Primary.ToString(CultureInfo.InvariantCulture),
+            Secondary.ToString(CultureInfo.InvariantCulture),
+            IsPrimary ? "P" : "S"
+        };
+
+        return string.Join(GlobalSettings.Comma.ToString(), cfgValues);
+    }
 }

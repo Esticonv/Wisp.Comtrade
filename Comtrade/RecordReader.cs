@@ -73,15 +73,15 @@ namespace Wisp.Comtrade
 			string filenameWithoutExtention=System.IO.Path.GetFileNameWithoutExtension(fullPathToFile);
 			string extention=System.IO.Path.GetExtension(fullPathToFile).ToLower();			
 
-			if(extention==GlobalSettings.extentionCFF){
-				using var cffFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionCFF, System.IO.FileMode.Open);
+			if(extention==GlobalSettings.ExtentionCFF){
+				using var cffFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtentionCFF, System.IO.FileMode.Open);
 				this.OpenFromStreamCFF(cffFileStream);
 			}
-			else if(extention==GlobalSettings.extentionCFG || extention==GlobalSettings.extentionDAT){
-				using var cfgFileStream= new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionCFG, System.IO.FileMode.Open);
+			else if(extention==GlobalSettings.ExtentionCFG || extention==GlobalSettings.ExtentionDAT){
+				using var cfgFileStream= new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtentionCFG, System.IO.FileMode.Open);
 				this.OpenFromStreamCFG(cfgFileStream);
 
-				using var datFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.extentionDAT, System.IO.FileMode.Open);
+				using var datFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtentionDAT, System.IO.FileMode.Open);
 				this.OpenFromStreamDAT(datFileStream);
 			}
 			else{
@@ -98,7 +98,7 @@ namespace Wisp.Comtrade
 				loadedAsListByteFile.AddRange(buffer.SkipLast(buffer.Length - readedBytes));
 			}
 			var cfgSection = System.Text.Encoding.UTF8.GetString(loadedAsListByteFile.ToArray())
-				.Split(new string[]{ GlobalSettings.newLine, "\n"}, StringSplitOptions.None);
+				.Split(new string[]{ GlobalSettings.NewLine, "\n"}, StringSplitOptions.None);
 			this.Configuration = new ConfigurationHandler(cfgSection.ToArray());
 		}
 
@@ -113,7 +113,7 @@ namespace Wisp.Comtrade
 
 			if (this.Configuration.dataFileType == DataFileType.ASCII) {
 				var datSection = System.Text.Encoding.UTF8.GetString(loadedAsListByteFile.ToArray())
-					.Split(new string[] { GlobalSettings.newLine, "\n" }, StringSplitOptions.None);
+					.Split(new string[] { GlobalSettings.NewLine, "\n" }, StringSplitOptions.None);
 				this.Data = new DataFileHandler(datSection.ToArray(), this.Configuration);
 			}
 			else {
@@ -151,7 +151,7 @@ namespace Wisp.Comtrade
 			}
 
 			var cffFileStrings = System.Text.Encoding.UTF8.GetString(loadedAsArrayByte, 0, indexOfDataSection)
-				.Split(new string[] { GlobalSettings.newLine, "\n" }, StringSplitOptions.None);
+				.Split(new string[] { GlobalSettings.NewLine, "\n" }, StringSplitOptions.None);
 
 			int indexInCff = 0;
 			if (!cffFileStrings[indexInCff].Contains("type: CFG")) {
@@ -170,7 +170,7 @@ namespace Wisp.Comtrade
 			this.Configuration = new ConfigurationHandler(cfgSection.ToArray());
 			if (this.Configuration.dataFileType == DataFileType.ASCII) {
 				var dataSectionStr=System.Text.Encoding.UTF8.GetString(loadedAsArrayByte, indexOfDataSection, loadedAsArrayByte.Length - indexOfDataSection)
-					.Split(new string[] { GlobalSettings.newLine, "\n" }, StringSplitOptions.None);
+					.Split(new string[] { GlobalSettings.NewLine, "\n" }, StringSplitOptions.None);
 
 				this.Data = new DataFileHandler(dataSectionStr.ToArray(), this.Configuration);
 			}
@@ -194,7 +194,7 @@ namespace Wisp.Comtrade
 			   (Math.Abs(this.Configuration.sampleRates[0].samplingFrequency) < 0.01d)){
 				//use timestamps in samples
 				for(int i=0;i<this.Data.samples.Length;i++){
-					list[i]=this.Data.samples[i].timestamp*this.Configuration.timeMultiplicationFactor;
+					list[i]=this.Data.samples[i].Timestamp*this.Configuration.timeMultiplicationFactor;
 				}
 			}
 			else{//use calculated by samplingFrequency
@@ -219,15 +219,15 @@ namespace Wisp.Comtrade
 		public IReadOnlyList<double> GetAnalogPrimaryChannel(int channelNumber)
 		{
 			double Kt=1;
-			if(this.Configuration.AnalogChannelInformations[channelNumber].isPrimary==false){
-				Kt=this.Configuration.AnalogChannelInformations[channelNumber].primary/
-					this.Configuration.AnalogChannelInformations[channelNumber].secondary;
+			if(this.Configuration.AnalogChannelInformations[channelNumber].IsPrimary==false){
+				Kt=this.Configuration.AnalogChannelInformations[channelNumber].Primary/
+					this.Configuration.AnalogChannelInformations[channelNumber].Secondary;
 			}
 			
 			var list=new double[this.Data.samples.Length];
 			for(int i=0;i<this.Data.samples.Length;i++){				
-				list[i]=(this.Data.samples[i].analogs[channelNumber]*this.Configuration.AnalogChannelInformations[channelNumber].a+
-				         this.Configuration.AnalogChannelInformations[channelNumber].b)*Kt;
+				list[i]=(this.Data.samples[i].AnalogValues[channelNumber]*this.Configuration.AnalogChannelInformations[channelNumber].MultiplierA+
+				         this.Configuration.AnalogChannelInformations[channelNumber].MultiplierB)*Kt;
 			}
 			return list;
 		}
@@ -239,7 +239,7 @@ namespace Wisp.Comtrade
 		{
 			var list=new bool[this.Data.samples.Length];
 			for(int i=0;i<this.Data.samples.Length;i++){
-				list[i]=this.Data.samples[i].digitals[channelNumber];
+				list[i]=this.Data.samples[i].DigitalValues[channelNumber];
 			}
 			return list;
 		}		

@@ -121,8 +121,8 @@ namespace Wisp.Comtrade
 
 		void ParseFirstLine(string firstLine)
 		{			
-			firstLine=firstLine.Replace(GlobalSettings.whiteSpace.ToString(),string.Empty);
-			var values=firstLine.Split(GlobalSettings.commaDelimiter);
+			firstLine=firstLine.Replace(GlobalSettings.WhiteSpace.ToString(),string.Empty);
+			var values=firstLine.Split(GlobalSettings.Comma);
 			this.StationName=values[0];
 			this.DeviceId=values[1];
 			if(values.Length==3){
@@ -132,8 +132,8 @@ namespace Wisp.Comtrade
 		
 		void ParseSecondLine(string secondLine)
 		{	
-			secondLine=secondLine.Replace(GlobalSettings.whiteSpace.ToString(),string.Empty);
-			var values=secondLine.Split(GlobalSettings.commaDelimiter);
+			secondLine=secondLine.Replace(GlobalSettings.WhiteSpace.ToString(),string.Empty);
+			var values=secondLine.Split(GlobalSettings.Comma);
 			//values[0];//not used, is equal sum of two next
 			this.analogChannelsCount=Convert.ToInt32(values[1].TrimEnd('A'), System.Globalization.CultureInfo.InvariantCulture);
 			this.digitalChannelsCount=Convert.ToInt32(values[2].TrimEnd('D'), System.Globalization.CultureInfo.InvariantCulture);
@@ -141,18 +141,18 @@ namespace Wisp.Comtrade
 		
 		void ParseFrequenceLine(string frequenceLine)
 		{
-			this.frequency=Convert.ToDouble(frequenceLine.Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);
+			this.frequency=Convert.ToDouble(frequenceLine.Trim(GlobalSettings.WhiteSpace), System.Globalization.CultureInfo.InvariantCulture);
 		}
 		
 		void ParseNumberOfSampleRates(string str)
 		{
-			this.samplingRateCount=Convert.ToInt32(str.Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);			
+			this.samplingRateCount=Convert.ToInt32(str.Trim(GlobalSettings.WhiteSpace), System.Globalization.CultureInfo.InvariantCulture);			
 		}
 		
 		internal static DateTime ParseDateTime(string str, out bool nanoSecond)
 		{
 			DateTime result;
-			if (DateTime.TryParseExact(str, GlobalSettings.dateTimeFormatForParseMicroSecond,
+			if (DateTime.TryParseExact(str, GlobalSettings.DateTimeFormatForParseMicroSecond,
 								  System.Globalization.CultureInfo.InvariantCulture,
 								  System.Globalization.DateTimeStyles.AllowWhiteSpaces,
 								  out result)) {
@@ -162,7 +162,7 @@ namespace Wisp.Comtrade
 			else {
 				var strings=str.Split('.');
 				str = strings[0] + '.' + strings[1].Substring(0, 7);
-				DateTime.TryParseExact(str, GlobalSettings.dateTimeFormatForParseNanoSecond,
+				DateTime.TryParseExact(str, GlobalSettings.DateTimeFormatForParseNanoSecond,
 								   System.Globalization.CultureInfo.InvariantCulture,
 								   System.Globalization.DateTimeStyles.AllowWhiteSpaces,
 								   out result);
@@ -173,12 +173,12 @@ namespace Wisp.Comtrade
 		
 		void ParseDataFileType(string str)
 		{
-			this.dataFileType=DataFileTypeConverter.Get(str.Trim(GlobalSettings.whiteSpace));
+			this.dataFileType=DataFileTypeConverter.Get(str.Trim(GlobalSettings.WhiteSpace));
 		}
 		
 		void ParseTimeMultiplicationFactor(string str)
 		{
-			this.timeMultiplicationFactor=Convert.ToDouble(str.Trim(GlobalSettings.whiteSpace), System.Globalization.CultureInfo.InvariantCulture);
+			this.timeMultiplicationFactor=Convert.ToDouble(str.Trim(GlobalSettings.WhiteSpace), System.Globalization.CultureInfo.InvariantCulture);
 		}
 	}
 }

@@ -15,9 +15,9 @@ namespace Wisp.Comtrade
 		
 		public SampleRate(string sampleRateLine)
 		{
-			var values=sampleRateLine.Split(GlobalSettings.commaDelimiter);
-			this.samplingFrequency=Convert.ToDouble(values[0].Trim(GlobalSettings.whiteSpace),System.Globalization.CultureInfo.InvariantCulture);
-			this.lastSampleNumber=Convert.ToInt32(values[1].Trim(GlobalSettings.whiteSpace));
+			var values=sampleRateLine.Split(GlobalSettings.Comma);
+			this.samplingFrequency=Convert.ToDouble(values[0].Trim(GlobalSettings.WhiteSpace),System.Globalization.CultureInfo.InvariantCulture);
+			this.lastSampleNumber=Convert.ToInt32(values[1].Trim(GlobalSettings.WhiteSpace));
 		}
 	}
 }

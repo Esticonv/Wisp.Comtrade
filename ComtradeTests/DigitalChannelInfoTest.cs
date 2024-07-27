@@ -13,10 +13,10 @@ namespace Wisp.Comtrade
 			var channelInfo=new DigitalChannelInformation(str);
 
 			Assert.AreEqual(4,					channelInfo.Index);
-			Assert.AreEqual("W8a_KQC C    Off", channelInfo.name);
-			Assert.AreEqual("",					channelInfo.phase);
-			Assert.AreEqual("",					channelInfo.circuitComponent);
-			Assert.AreEqual(false,				channelInfo.normalState);	
+			Assert.AreEqual("W8a_KQC C    Off", channelInfo.Name);
+			Assert.AreEqual("",					channelInfo.Phase);
+			Assert.AreEqual("",					channelInfo.CircuitComponent);
+			Assert.AreEqual(false,				channelInfo.NormalState);	
 		}
 	}
 }
