@@ -1,4 +1,4 @@
-﻿namespace Wisp.Comtrade;
+﻿namespace Wisp.Comtrade.Models;
 
 /// <summary>
 ///     Data file type

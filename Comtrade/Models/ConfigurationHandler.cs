@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using Wisp.Comtrade.Utils;
 
-namespace Wisp.Comtrade;
+namespace Wisp.Comtrade.Models;
 
 public class ConfigurationHandler
 {
-    private List<AnalogChannelInformation> _analogChannelInformationList = [];
-    private List<DigitalChannelInformation> _digitalChannelInformationList = [];
+    private List<AnalogChannel> _analogChannelInformationList = [];
+    private List<DigitalChannel> _digitalChannelInformationList = [];
     private List<SampleRate> _sampleRates = [];
     public DataFileType DataFileType = DataFileType.Undefined;
     internal double TimeMultiplicationFactor = 1.0;
@@ -34,8 +35,8 @@ public class ConfigurationHandler
     public int AnalogChannelsCount { get; private set; }
     public int DigitalChannelsCount { get; private set; }
     public IReadOnlyList<SampleRate> SampleRates => _sampleRates;
-    public IReadOnlyList<AnalogChannelInformation> AnalogChannelInformationList => _analogChannelInformationList;
-    public IReadOnlyList<DigitalChannelInformation> DigitalChannelInformationList => _digitalChannelInformationList;
+    public IReadOnlyList<AnalogChannel> AnalogChannelInformationList => _analogChannelInformationList;
+    public IReadOnlyList<DigitalChannel> DigitalChannelInformationList => _digitalChannelInformationList;
     public double Frequency { get; set; } = 50.0;
     public int SamplingRateCount { get; set; }
 
@@ -57,16 +58,18 @@ public class ConfigurationHandler
         ParseFirstLine(strings[0]);
         ParseSecondLine(strings[1]);
 
-        _analogChannelInformationList = new List<AnalogChannelInformation>();
+        _analogChannelInformationList = new List<AnalogChannel>();
 
-        for (var i = 0; i < AnalogChannelsCount; i++) {
-            _analogChannelInformationList.Add(new AnalogChannelInformation(strings[2 + i]));
+        for (var i = 0; i < AnalogChannelsCount; i++)
+        {
+            _analogChannelInformationList.Add(new AnalogChannel(strings[2 + i]));
         }
 
-        _digitalChannelInformationList = new List<DigitalChannelInformation>();
+        _digitalChannelInformationList = new List<DigitalChannel>();
 
-        for (var i = 0; i < DigitalChannelsCount; i++) {
-            _digitalChannelInformationList.Add(new DigitalChannelInformation(strings[2 + i + AnalogChannelsCount]));
+        for (var i = 0; i < DigitalChannelsCount; i++)
+        {
+            _digitalChannelInformationList.Add(new DigitalChannel(strings[2 + i + AnalogChannelsCount]));
         }
 
         var strIndex = 2 + AnalogChannelsCount + DigitalChannelsCount;
@@ -76,11 +79,14 @@ public class ConfigurationHandler
 
         _sampleRates = new List<SampleRate>();
 
-        if (SamplingRateCount == 0) {
+        if (SamplingRateCount == 0)
+        {
             _sampleRates.Add(new SampleRate(strings[strIndex++]));
         }
-        else {
-            for (var i = 0; i < SamplingRateCount; i++) {
+        else
+        {
+            for (var i = 0; i < SamplingRateCount; i++)
+            {
                 _sampleRates.Add(new SampleRate(strings[strIndex + i]));
             }
 
@@ -105,7 +111,8 @@ public class ConfigurationHandler
         StationName = values[0];
         DeviceId = values[1];
 
-        if (values.Length == 3) {
+        if (values.Length == 3)
+        {
             Version = ComtradeVersionConverter.Get(values[2]);
         }
     }
@@ -134,7 +141,8 @@ public class ConfigurationHandler
         if (DateTime.TryParseExact(str, GlobalSettings.DateTimeFormatForParseMicroSecond,
                                    CultureInfo.InvariantCulture,
                                    DateTimeStyles.AllowWhiteSpaces,
-                                   out var result)) {
+                                   out var result))
+        {
             nanoSecond = false;
             return result;
         }

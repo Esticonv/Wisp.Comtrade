@@ -5,7 +5,7 @@
 		<Nullable>enable</Nullable>
 		<AssemblyName>Wisp.Comtrade</AssemblyName>
 		<RootNamespace>Wisp.Comtrade</RootNamespace>
-		<Version>0.9.5</Version>
+		<Version>1.0.0</Version>
 		<Authors>Esti</Authors>
 		<Company>Esti corp</Company>
 		<OutputType>Library</OutputType>
@@ -17,8 +17,8 @@
 		<PackageTags>COMTRADE</PackageTags>
 		<Description>COMTRADE (Common Format for Transient Data Exchange for Power Systems) reading and creating library</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageReleaseNotes>Add support single file format. Add ability to work with stream</PackageReleaseNotes>
-		<Copyright>Copyright 2022</Copyright>
+		<PackageReleaseNotes>Renamed classes, fields, properties</PackageReleaseNotes>
+		<Copyright>Copyright 2024</Copyright>
 		<PackageProjectUrl>https://github.com/Esticonv/Wisp.Comtrade</PackageProjectUrl>
   </PropertyGroup>
 

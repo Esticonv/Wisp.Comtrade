@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Wisp.Comtrade.Models;
+using Xunit;
 
 namespace Wisp.Comtrade.Tests;
 
@@ -8,7 +9,7 @@ public class AnalogChannelInfoTest
     public void ParserTest()
     {
         const string str = @"  8,F8-VN               ,N,,V     ,     0.012207,1,2,-32767,32767, 330000.0,100.0,S";
-        var channelInfo = new AnalogChannelInformation(str);
+        var channelInfo = new AnalogChannel(str);
 
         Assert.Equal(8, channelInfo.Index);
         Assert.Equal("F8-VN", channelInfo.Name);

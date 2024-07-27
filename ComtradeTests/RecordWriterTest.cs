@@ -1,4 +1,5 @@
 ﻿using System;
+using Wisp.Comtrade.Models;
 using Xunit;
 
 namespace Wisp.Comtrade.Tests;
@@ -8,26 +9,26 @@ public class RecordWriterTest
     private RecordWriter GetWriterToTest()
     {
         var writer = new RecordWriter();
-        writer.AddAnalogChannel(new AnalogChannelInformation("channel1a", "A"));
-        writer.AddAnalogChannel(new AnalogChannelInformation("channel2a", "B"));
-        writer.AddAnalogChannel(new AnalogChannelInformation("channel3a", "C"));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel1b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel2b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel3b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel4b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel5b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel6b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel7b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel8b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel9b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel10b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel11b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel12b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel13b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel14b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel15b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel16b", ""));
-        writer.AddDigitalChannel(new DigitalChannelInformation("channel17b", ""));
+        writer.AddAnalogChannel(new AnalogChannel("channel1a", "A"));
+        writer.AddAnalogChannel(new AnalogChannel("channel2a", "B"));
+        writer.AddAnalogChannel(new AnalogChannel("channel3a", "C"));
+        writer.AddDigitalChannel(new DigitalChannel("channel1b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel2b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel3b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel4b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel5b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel6b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel7b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel8b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel9b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel10b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel11b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel12b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel13b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel14b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel15b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel16b", ""));
+        writer.AddDigitalChannel(new DigitalChannel("channel17b", ""));
 
         writer.AddSample(0,
                          [0, 0, 0],

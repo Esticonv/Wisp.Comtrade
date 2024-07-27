@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Wisp.Comtrade;
+namespace Wisp.Comtrade.Models;
 
-public class AnalogChannelInformation
+public class AnalogChannel
 {
     /// <summary>
     ///     Parameter 'PS'
@@ -23,13 +23,13 @@ public class AnalogChannelInformation
     /// </summary>
     public readonly double Secondary = 1.0;
 
-    public AnalogChannelInformation(string name, string phase)
+    public AnalogChannel(string name, string phase)
     {
         Name = name;
         Phase = phase;
     }
 
-    public AnalogChannelInformation(string analogLine)
+    public AnalogChannel(string analogLine)
     {
         //TODO: Check if line length == 13;
         var values = analogLine.Split(GlobalSettings.Comma);
@@ -49,7 +49,8 @@ public class AnalogChannelInformation
 
         var isPrimaryText = values[12].Trim();
 
-        if (isPrimaryText.ToLower().Equals("s")) {
+        if (isPrimaryText.ToLower().Equals("s"))
+        {
             IsPrimary = false;
         }
     }

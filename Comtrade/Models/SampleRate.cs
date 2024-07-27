@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Wisp.Comtrade
+namespace Wisp.Comtrade.Models
 {
-	public class SampleRate
-	{
+    public class SampleRate
+    {
         /// <summary>
         /// Parameter 'samp', Hz
         /// </summary>
@@ -16,10 +16,10 @@ namespace Wisp.Comtrade
 		public int LastSampleNumber { get; }
 
         public SampleRate(string sampleRateLine)
-		{
-			var values=sampleRateLine.Split(GlobalSettings.Comma);
-			SamplingFrequency=Convert.ToDouble(values[0].Trim(), CultureInfo.InvariantCulture);
-			LastSampleNumber=Convert.ToInt32(values[1].Trim());
-		}
-	}
+        {
+            var values = sampleRateLine.Split(GlobalSettings.Comma);
+            SamplingFrequency = Convert.ToDouble(values[0].Trim(), CultureInfo.InvariantCulture);
+            LastSampleNumber = Convert.ToInt32(values[1].Trim());
+        }
+    }
 }

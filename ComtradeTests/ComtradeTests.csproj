@@ -28,8 +28,4 @@
     <ProjectReference Include="..\Comtrade\Comtrade.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ExampleSet2\" />
-  </ItemGroup>
-
 </Project>

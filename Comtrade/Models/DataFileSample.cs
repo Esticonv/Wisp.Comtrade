@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Wisp.Comtrade;
+namespace Wisp.Comtrade.Models;
 
 public class DataFileSample
 {
@@ -25,14 +25,17 @@ public class DataFileSample
         Number = Convert.ToInt32(strings[0]);
         Timestamp = Convert.ToInt32(strings[1]);
 
-        for (var i = 0; i < analogCount; i++) {
-            if (strings[i + 2] != string.Empty) {
+        for (var i = 0; i < analogCount; i++)
+        {
+            if (strings[i + 2] != string.Empty)
+            {
                 //by Standard, can be missing value. In that case by default=0
                 AnalogValues[i] = Convert.ToDouble(strings[i + 2], CultureInfo.InvariantCulture);
             }
         }
 
-        for (var i = 0; i < digitalCount; i++) {
+        for (var i = 0; i < digitalCount; i++)
+        {
             DigitalValues[i] = Convert.ToBoolean(Convert.ToInt32(strings[i + 2 + analogCount]));
         }
     }
@@ -47,24 +50,29 @@ public class DataFileSample
 
         int digitalByteStart;
 
-        if (dataFileType == DataFileType.Binary) {
-            for (var i = 0; i < analogCount; i++) {
+        if (dataFileType == DataFileType.Binary)
+        {
+            for (var i = 0; i < analogCount; i++)
+            {
                 AnalogValues[i] = BitConverter.ToInt16(bytes, 8 + i * 2);
             }
 
             digitalByteStart = 8 + 2 * analogCount;
         }
-        else {
-            if (dataFileType == DataFileType.Binary32) {
+        else
+        {
+            if (dataFileType == DataFileType.Binary32)
+            {
                 for (var i = 0; i < analogCount; i++)
-                    //TODO add test
+                //TODO add test
                 {
                     AnalogValues[i] = BitConverter.ToInt32(bytes, 8 + i * 4);
                 }
             }
-            else if (dataFileType == DataFileType.Float32) {
+            else if (dataFileType == DataFileType.Float32)
+            {
                 for (var i = 0; i < analogCount; i++)
-                    //TODO add test
+                //TODO add test
                 {
                     AnalogValues[i] = BitConverter.ToSingle(bytes, 8 + i * 4);
                 }
@@ -75,10 +83,11 @@ public class DataFileSample
 
         //var digitalByteCount = DataFileHandler.GetDigitalByteCount(digitalCount);
 
-        for (var i = 0; i < digitalCount; i++) {
+        for (var i = 0; i < digitalCount; i++)
+        {
             var digitalByteIterator = i / 8;
 
-            DigitalValues[i] = Convert.ToBoolean((bytes[digitalByteStart + digitalByteIterator] >> (i - digitalByteIterator * 8)) & 1);
+            DigitalValues[i] = Convert.ToBoolean(bytes[digitalByteStart + digitalByteIterator] >> i - digitalByteIterator * 8 & 1);
         }
     }
 
@@ -100,18 +109,20 @@ public class DataFileSample
 
         result += GlobalSettings.Comma + Timestamp.ToString();
 
-        foreach (var analog in AnalogValues) {
+        foreach (var analog in AnalogValues)
+        {
             result += GlobalSettings.Comma + analog.ToString(CultureInfo.InvariantCulture);
         }
 
-        foreach (var digital in DigitalValues) {
+        foreach (var digital in DigitalValues)
+        {
             result += GlobalSettings.Comma + Convert.ToInt32(digital).ToString(CultureInfo.InvariantCulture);
         }
 
         return result;
     }
 
-    public byte[] ToByteDAT(DataFileType dataFileType, IReadOnlyList<AnalogChannelInformation> analogInformations)
+    public byte[] ToByteDAT(DataFileType dataFileType, IReadOnlyList<AnalogChannel> analogInformations)
     {
         var result = new byte[DataFileHandler.GetByteCountInOneSample(AnalogValues.Length, DigitalValues.Length, dataFileType)];
 
@@ -121,7 +132,8 @@ public class DataFileSample
         BitConverter.GetBytes(Number).CopyTo(result, 0);
         BitConverter.GetBytes(Timestamp).CopyTo(result, 4);
 
-        switch (dataFileType) {
+        switch (dataFileType)
+        {
             case DataFileType.Binary:
                 AnalogsToBinaryDAT(result, analogInformations);
                 break;
@@ -139,19 +151,21 @@ public class DataFileSample
         return result;
     }
 
-    private void AnalogsToBinaryDAT(byte[] result, IReadOnlyList<AnalogChannelInformation> analogInformations)
+    private void AnalogsToBinaryDAT(byte[] result, IReadOnlyList<AnalogChannel> analogInformations)
     {
-        for (var i = 0; i < AnalogValues.Length; i++) {
-            var s = (short) ((AnalogValues[i] - analogInformations[i].MultiplierB) / analogInformations[i].MultiplierA);
+        for (var i = 0; i < AnalogValues.Length; i++)
+        {
+            var s = (short)((AnalogValues[i] - analogInformations[i].MultiplierB) / analogInformations[i].MultiplierA);
 
             BitConverter.GetBytes(s).CopyTo(result, 8 + i * 2);
         }
     }
 
-    private void AnalogsToBinary32DAT(byte[] result, IReadOnlyList<AnalogChannelInformation> analogInformations)
+    private void AnalogsToBinary32DAT(byte[] result, IReadOnlyList<AnalogChannel> analogInformations)
     {
-        for (var i = 0; i < AnalogValues.Length; i++) {
-            var s = (int) ((AnalogValues[i] - analogInformations[i].MultiplierB) / analogInformations[i].MultiplierA);
+        for (var i = 0; i < AnalogValues.Length; i++)
+        {
+            var s = (int)((AnalogValues[i] - analogInformations[i].MultiplierB) / analogInformations[i].MultiplierA);
 
             BitConverter.GetBytes(s).CopyTo(result, 8 + i * 4);
         }
@@ -159,8 +173,9 @@ public class DataFileSample
 
     private void AnalogsToFloat32DAT(byte[] result)
     {
-        for (var i = 0; i < AnalogValues.Length; i++) {
-            BitConverter.GetBytes((float) AnalogValues[i]).CopyTo(result, 8 + i * 4);
+        for (var i = 0; i < AnalogValues.Length; i++)
+        {
+            BitConverter.GetBytes((float)AnalogValues[i]).CopyTo(result, 8 + i * 4);
         }
     }
 
@@ -169,10 +184,12 @@ public class DataFileSample
         var byteIndex = 0;
         byte s = 0;
 
-        for (var i = 0; i < DigitalValues.Length; i++) {
-            s = (byte) (Convert.ToInt32(s) | (Convert.ToInt32(DigitalValues[i]) << (i - byteIndex * 8)));
+        for (var i = 0; i < DigitalValues.Length; i++)
+        {
+            s = (byte)(Convert.ToInt32(s) | Convert.ToInt32(DigitalValues[i]) << i - byteIndex * 8);
 
-            if ((i + 1) % 8 == 0 || i + 1 == DigitalValues.Length) {
+            if ((i + 1) % 8 == 0 || i + 1 == DigitalValues.Length)
+            {
                 result[digitalByteStart + byteIndex] = s;
                 s = 0;
                 byteIndex++;

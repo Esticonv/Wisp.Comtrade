@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Wisp.Comtrade;
+namespace Wisp.Comtrade.Models;
 
-public class DigitalChannelInformation
+public class DigitalChannel
 {
-    public DigitalChannelInformation(string name, string phase)
+    public DigitalChannel(string name, string phase)
     {
         Name = name;
         Phase = phase;
     }
 
-    public DigitalChannelInformation(string digitalLine)
+    public DigitalChannel(string digitalLine)
     {
         var values = digitalLine.Split(GlobalSettings.Comma);
 
@@ -20,7 +20,8 @@ public class DigitalChannelInformation
         Phase = values[2].Trim();
         CircuitComponent = values[3].Trim();
 
-        if (values.Length > 4) {
+        if (values.Length > 4)
+        {
             //some files not include this part of line
             NormalState = Convert.ToBoolean(Convert.ToInt32(values[4].Trim(), CultureInfo.InvariantCulture));
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-namespace Wisp.Comtrade;
+namespace Wisp.Comtrade.Models;
 
 public class DataFileHandler
 {
@@ -15,14 +15,17 @@ public class DataFileHandler
         var samplesCount = configuration.SampleRates[^1].LastSampleNumber;
         Samples = new DataFileSample[samplesCount];
 
-        if (configuration.DataFileType == DataFileType.ASCII) {
+        if (configuration.DataFileType == DataFileType.ASCII)
+        {
             strings = strings.Where(x => x != string.Empty).ToArray(); //removing empty strings (when *.dat file not following Standard)
 
-            for (var i = 0; i < samplesCount; i++) {
+            for (var i = 0; i < samplesCount; i++)
+            {
                 Samples[i] = new DataFileSample(strings[i], configuration.AnalogChannelsCount, configuration.DigitalChannelsCount);
             }
         }
-        else {
+        else
+        {
             throw new InvalidOperationException($"Configuration dataFileType must be ASCII, but was {configuration.DataFileType}");
         }
     }
@@ -32,27 +35,31 @@ public class DataFileHandler
         var samplesCount = configuration.SampleRates[^1].LastSampleNumber;
         Samples = new DataFileSample[samplesCount];
 
-        if (configuration.DataFileType is DataFileType.Binary or DataFileType.Binary32 or DataFileType.Float32) {
+        if (configuration.DataFileType is DataFileType.Binary or DataFileType.Binary32 or DataFileType.Float32)
+        {
             var oneSampleLength = GetByteCountInOneSample(configuration.AnalogChannelsCount, configuration.DigitalChannelsCount, configuration.DataFileType);
 
-            for (var i = 0; i < samplesCount; i++) {
+            for (var i = 0; i < samplesCount; i++)
+            {
                 var bytesOneSample = new byte[oneSampleLength];
 
-                for (var j = 0; j < oneSampleLength; j++) {
+                for (var j = 0; j < oneSampleLength; j++)
+                {
                     bytesOneSample[j] = bytes[i * oneSampleLength + j];
                 }
 
                 Samples[i] = new DataFileSample(bytesOneSample, configuration.DataFileType, configuration.AnalogChannelsCount, configuration.DigitalChannelsCount);
             }
         }
-        else {
+        else
+        {
             throw new InvalidOperationException($"Configuration dataFileType must be Binary, Binary32 or Float , but was {configuration.DataFileType}");
         }
     }
 
     public static int GetDigitalByteCount(int digitalChannelsCount)
     {
-        return (digitalChannelsCount / 16 + (digitalChannelsCount % 16 == 0 ? 0 : 1) ) * Digital16ChannelLength;
+        return (digitalChannelsCount / 16 + (digitalChannelsCount % 16 == 0 ? 0 : 1)) * Digital16ChannelLength;
     }
 
     public static int GetByteCountInOneSample(int analogsChannelsCount, int digitalChannelsCount, DataFileType dataFileType)

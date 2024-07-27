@@ -1,4 +1,5 @@
 ﻿using System;
+using Wisp.Comtrade.Models;
 using Xunit;
 
 namespace Wisp.Comtrade.Tests;

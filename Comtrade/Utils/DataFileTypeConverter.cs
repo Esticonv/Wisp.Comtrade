@@ -1,12 +1,14 @@
 ﻿using System;
+using Wisp.Comtrade.Models;
 
-namespace Wisp.Comtrade;
+namespace Wisp.Comtrade.Utils;
 
 internal static class DataFileTypeConverter
 {
     internal static DataFileType Get(string text)
     {
-        return text.ToLowerInvariant() switch {
+        return text.ToLowerInvariant() switch
+        {
             "ascii" => DataFileType.ASCII,
             "binary" => DataFileType.Binary,
             "binary32" => DataFileType.Binary32,

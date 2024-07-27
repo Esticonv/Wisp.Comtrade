@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Wisp.Comtrade.Models;
 
 namespace Wisp.Comtrade
 {
-	/// <summary>
-	/// Class for parsing comtrade files
-	/// </summary>
-	public class RecordReader
+    /// <summary>
+    /// Class for parsing comtrade files
+    /// </summary>
+    public class RecordReader
 	{
 		/// <summary>
 		/// Get configuration for loaded record
