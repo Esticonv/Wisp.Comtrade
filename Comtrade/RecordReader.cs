@@ -29,8 +29,8 @@ namespace Wisp.Comtrade
 		public bool TimeLineNanoSecondResolution
         {			
             get {
-				if (this.Configuration.samplingRateCount == 0 || this.Configuration.sampleRates[0].samplingFrequency == 0) {
-					return this.Configuration.timeLineNanoSecondResolution;
+				if (this.Configuration.SamplingRateCount == 0 || this.Configuration.SampleRates[0].samplingFrequency == 0) {
+					return this.Configuration.TimeLineNanoSecondResolution;
 				}
 				else {
 					return true;
@@ -111,7 +111,7 @@ namespace Wisp.Comtrade
 				loadedAsListByteFile.AddRange(buffer.SkipLast(buffer.Length - readedBytes));
 			}
 
-			if (this.Configuration.dataFileType == DataFileType.ASCII) {
+			if (this.Configuration.DataFileType == DataFileType.ASCII) {
 				var datSection = System.Text.Encoding.UTF8.GetString(loadedAsListByteFile.ToArray())
 					.Split(new string[] { GlobalSettings.NewLine, "\n" }, StringSplitOptions.None);
 				this.Data = new DataFileHandler(datSection.ToArray(), this.Configuration);
@@ -168,7 +168,7 @@ namespace Wisp.Comtrade
 			}
 
 			this.Configuration = new ConfigurationHandler(cfgSection.ToArray());
-			if (this.Configuration.dataFileType == DataFileType.ASCII) {
+			if (this.Configuration.DataFileType == DataFileType.ASCII) {
 				var dataSectionStr=System.Text.Encoding.UTF8.GetString(loadedAsArrayByte, indexOfDataSection, loadedAsArrayByte.Length - indexOfDataSection)
 					.Split(new string[] { GlobalSettings.NewLine, "\n" }, StringSplitOptions.None);
 
@@ -190,11 +190,11 @@ namespace Wisp.Comtrade
 		{
 			var list=new double[this.Data.samples.Length];
 			
-			if(this.Configuration.samplingRateCount == 0 || 
-			   (Math.Abs(this.Configuration.sampleRates[0].samplingFrequency) < 0.01d)){
+			if(this.Configuration.SamplingRateCount == 0 || 
+			   (Math.Abs(this.Configuration.SampleRates[0].samplingFrequency) < 0.01d)){
 				//use timestamps in samples
 				for(int i=0;i<this.Data.samples.Length;i++){
-					list[i]=this.Data.samples[i].Timestamp*this.Configuration.timeMultiplicationFactor;
+					list[i]=this.Data.samples[i].Timestamp*this.Configuration.TimeMultiplicationFactor;
 				}
 			}
 			else{//use calculated by samplingFrequency
@@ -203,11 +203,11 @@ namespace Wisp.Comtrade
 				const double secondToNanoSecond=1000000000;
 				for(int i=0;i<this.Data.samples.Length;i++){
 					list[i]=currentTime;
-					if(i>=this.Configuration.sampleRates[sampleRateIndex].lastSampleNumber){
+					if(i>=this.Configuration.SampleRates[sampleRateIndex].lastSampleNumber){
 						sampleRateIndex++;
 					}				
 					
-					currentTime+=secondToNanoSecond/this.Configuration.sampleRates[sampleRateIndex].samplingFrequency;					
+					currentTime+=secondToNanoSecond/this.Configuration.SampleRates[sampleRateIndex].samplingFrequency;					
 				} 
 			}			
 			return list;
@@ -219,15 +219,15 @@ namespace Wisp.Comtrade
 		public IReadOnlyList<double> GetAnalogPrimaryChannel(int channelNumber)
 		{
 			double Kt=1;
-			if(this.Configuration.AnalogChannelInformations[channelNumber].IsPrimary==false){
-				Kt=this.Configuration.AnalogChannelInformations[channelNumber].Primary/
-					this.Configuration.AnalogChannelInformations[channelNumber].Secondary;
+			if(this.Configuration.AnalogChannelInformationList[channelNumber].IsPrimary==false){
+				Kt=this.Configuration.AnalogChannelInformationList[channelNumber].Primary/
+					this.Configuration.AnalogChannelInformationList[channelNumber].Secondary;
 			}
 			
 			var list=new double[this.Data.samples.Length];
 			for(int i=0;i<this.Data.samples.Length;i++){				
-				list[i]=(this.Data.samples[i].AnalogValues[channelNumber]*this.Configuration.AnalogChannelInformations[channelNumber].MultiplierA+
-				         this.Configuration.AnalogChannelInformations[channelNumber].MultiplierB)*Kt;
+				list[i]=(this.Data.samples[i].AnalogValues[channelNumber]*this.Configuration.AnalogChannelInformationList[channelNumber].MultiplierA+
+				         this.Configuration.AnalogChannelInformationList[channelNumber].MultiplierB)*Kt;
 			}
 			return list;
 		}

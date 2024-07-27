@@ -80,8 +80,8 @@ namespace Wisp.Comtrade
 		void ReaderAsserts(string fullpath)
 		{
 			var reader=new RecordReader(fullpath);
-			Assert.AreEqual(3, reader.Configuration.AnalogChannelInformations.Count);
-			Assert.AreEqual(17, reader.Configuration.DigitalChannelInformations.Count);
+			Assert.AreEqual(3, reader.Configuration.AnalogChannelInformationList.Count);
+			Assert.AreEqual(17, reader.Configuration.DigitalChannelInformationList.Count);
 
 			var timeLine=reader.GetTimeLine();
 			var analogs1=reader.GetAnalogPrimaryChannel(0);

@@ -48,9 +48,9 @@ namespace Wisp.Comtrade
 			this.DeviceId=reader.Configuration.DeviceId;
 
 			this.samples.AddRange(reader.Data.samples);
-			this.analogChannelInformations.AddRange(reader.Configuration.AnalogChannelInformations);
-			this.digitalChannelInformations.AddRange(reader.Configuration.DigitalChannelInformations);
-			this.sampleRates.AddRange(reader.Configuration.sampleRates);
+			this.analogChannelInformations.AddRange(reader.Configuration.AnalogChannelInformationList);
+			this.digitalChannelInformations.AddRange(reader.Configuration.DigitalChannelInformationList);
+			this.sampleRates.AddRange(reader.Configuration.SampleRates);
 			
 			this.StartTime=reader.Configuration.StartTime;
 			this.TriggerTime=reader.Configuration.TriggerTime;

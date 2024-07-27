@@ -25,23 +25,22 @@ BINARY
 1.00
 ";
 			var strings=str.Split(new string[]{"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
-			var configHandler=new ConfigurationHandler();
-			configHandler.Parse(strings);
+			var configHandler=new ConfigurationHandler(strings);
 
 			Assert.AreEqual("MASHUK-W2D-C60-1",		configHandler.StationName);
 			Assert.AreEqual("520",					configHandler.DeviceId);
-			Assert.AreEqual(ComtradeVersion.V1999,	configHandler.version);
-			Assert.AreEqual(2,						configHandler.analogChannelsCount);
-			Assert.AreEqual(2,						configHandler.AnalogChannelInformations.Count);
-			Assert.AreEqual(3,						configHandler.digitalChannelsCount);
-			Assert.AreEqual(3,						configHandler.DigitalChannelInformations.Count);
-			Assert.AreEqual(50,						configHandler.frequency, 0.01) ;
-			Assert.AreEqual(0,						configHandler.samplingRateCount);
-			Assert.AreEqual(1,						configHandler.sampleRates.Count);
+			Assert.AreEqual(ComtradeVersion.V1999,	configHandler.Version);
+			Assert.AreEqual(2,						configHandler.AnalogChannelsCount);
+			Assert.AreEqual(2,						configHandler.AnalogChannelInformationList.Count);
+			Assert.AreEqual(3,						configHandler.DigitalChannelsCount);
+			Assert.AreEqual(3,						configHandler.DigitalChannelInformationList.Count);
+			Assert.AreEqual(50,						configHandler.Frequency, 0.01) ;
+			Assert.AreEqual(0,						configHandler.SamplingRateCount);
+			Assert.AreEqual(1,						configHandler.SampleRates.Count);
 			//Assert.AreEqual(, ); время1
 			//Assert.AreEqual(, ); время2
-			Assert.AreEqual(DataFileType.Binary, configHandler.dataFileType);
-			//остальное дописать
+			Assert.AreEqual(DataFileType.Binary, configHandler.DataFileType);
+			//TODO add other field asserts
 		}
 	}
 }

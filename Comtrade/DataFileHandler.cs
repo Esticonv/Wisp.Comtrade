@@ -30,46 +30,46 @@ namespace Wisp.Comtrade
 
 		internal DataFileHandler(string[] strings, ConfigurationHandler configuration)
 		{
-			int samplesCount = configuration.sampleRates[^1].lastSampleNumber;
+			int samplesCount = configuration.SampleRates[^1].lastSampleNumber;
 			this.samples = new DataFileSample[samplesCount];
 
-			if (configuration.dataFileType == DataFileType.ASCII) {
+			if (configuration.DataFileType == DataFileType.ASCII) {
 				strings = strings.Where(x => x != string.Empty).ToArray();//removing empty strings (when *.dat file not following Standart)
 				for (int i = 0; i < samplesCount; i++) {
 					this.samples[i] = new DataFileSample(strings[i],
-													   configuration.analogChannelsCount, configuration.digitalChannelsCount);
+													   configuration.AnalogChannelsCount, configuration.DigitalChannelsCount);
 				}
 			}
             else {
-				throw new InvalidOperationException($"Configuration dataFileType must be ASCII, but was {configuration.dataFileType}");
+				throw new InvalidOperationException($"Configuration dataFileType must be ASCII, but was {configuration.DataFileType}");
             }
 		}
 
 		internal DataFileHandler(byte[] bytes, ConfigurationHandler configuration)
 		{
-			int samplesCount = configuration.sampleRates[^1].lastSampleNumber;
+			int samplesCount = configuration.SampleRates[^1].lastSampleNumber;
 			this.samples = new DataFileSample[samplesCount];
 
-			if (configuration.dataFileType == DataFileType.Binary ||
-			   configuration.dataFileType == DataFileType.Binary32 ||
-			   configuration.dataFileType == DataFileType.Float32) {
+			if (configuration.DataFileType == DataFileType.Binary ||
+			   configuration.DataFileType == DataFileType.Binary32 ||
+			   configuration.DataFileType == DataFileType.Float32) {
 				//var fileContent = System.IO.File.ReadAllBytes(fullPathToFileDAT);
 
-				int oneSampleLength = DataFileHandler.GetByteCountInOneSample(configuration.analogChannelsCount,
-																 configuration.digitalChannelsCount,
-																 configuration.dataFileType);
+				int oneSampleLength = DataFileHandler.GetByteCountInOneSample(configuration.AnalogChannelsCount,
+																 configuration.DigitalChannelsCount,
+																 configuration.DataFileType);
 
 				for (int i = 0; i < samplesCount; i++) {
 					var bytesOneSample = new byte[oneSampleLength];
 					for (int j = 0; j < oneSampleLength; j++) {
 						bytesOneSample[j] = bytes[i * oneSampleLength + j];
 					}
-					this.samples[i] = new DataFileSample(bytesOneSample, configuration.dataFileType,
-													   configuration.analogChannelsCount, configuration.digitalChannelsCount);
+					this.samples[i] = new DataFileSample(bytesOneSample, configuration.DataFileType,
+													   configuration.AnalogChannelsCount, configuration.DigitalChannelsCount);
 				}
 			}
 			else {
-				throw new InvalidOperationException($"Configuration dataFileType must be Binary, Binary32 or Float , but was {configuration.dataFileType}");
+				throw new InvalidOperationException($"Configuration dataFileType must be Binary, Binary32 or Float , but was {configuration.DataFileType}");
 			}
 		
 		}
