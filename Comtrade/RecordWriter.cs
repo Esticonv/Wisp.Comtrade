@@ -47,7 +47,7 @@ namespace Wisp.Comtrade
 			this.StationName=reader.Configuration.StationName;
 			this.DeviceId=reader.Configuration.DeviceId;
 
-			this.samples.AddRange(reader.Data.samples);
+			this.samples.AddRange(reader.Data.Samples);
 			this.analogChannelInformations.AddRange(reader.Configuration.AnalogChannelInformationList);
 			this.digitalChannelInformations.AddRange(reader.Configuration.DigitalChannelInformationList);
 			this.sampleRates.AddRange(reader.Configuration.SampleRates);
@@ -160,8 +160,8 @@ namespace Wisp.Comtrade
 			else {
 				strings.Add(this.sampleRates.Count.ToString());
 				foreach (var sampleRate in this.sampleRates) {
-					strings.Add(sampleRate.samplingFrequency.ToString() + GlobalSettings.Comma +
-								sampleRate.lastSampleNumber.ToString());
+					strings.Add(sampleRate.SamplingFrequency.ToString() + GlobalSettings.Comma +
+								sampleRate.LastSampleNumber.ToString());
 				}
 			}
 

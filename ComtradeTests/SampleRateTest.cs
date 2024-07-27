@@ -12,8 +12,8 @@ namespace Wisp.Comtrade
 			const string str=@" 0 ,  1360";
 			var sampleRate=new SampleRate(str);
 
-			Assert.AreEqual(0,		sampleRate.samplingFrequency, 0.1);
-			Assert.AreEqual(1360,	sampleRate.lastSampleNumber);
+			Assert.AreEqual(0,		sampleRate.SamplingFrequency, 0.1);
+			Assert.AreEqual(1360,	sampleRate.LastSampleNumber);
 		}
 	}
 }

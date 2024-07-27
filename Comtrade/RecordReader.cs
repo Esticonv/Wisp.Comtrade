@@ -29,7 +29,7 @@ namespace Wisp.Comtrade
 		public bool TimeLineNanoSecondResolution
         {			
             get {
-				if (this.Configuration.SamplingRateCount == 0 || this.Configuration.SampleRates[0].samplingFrequency == 0) {
+				if (this.Configuration.SamplingRateCount == 0 || this.Configuration.SampleRates[0].SamplingFrequency == 0) {
 					return this.Configuration.TimeLineNanoSecondResolution;
 				}
 				else {
@@ -188,26 +188,26 @@ namespace Wisp.Comtrade
 		/// Use TimeLineResolution property for get information about</returns>
 		public IReadOnlyList<double> GetTimeLine()
 		{
-			var list=new double[this.Data.samples.Length];
+			var list=new double[this.Data.Samples.Length];
 			
 			if(this.Configuration.SamplingRateCount == 0 || 
-			   (Math.Abs(this.Configuration.SampleRates[0].samplingFrequency) < 0.01d)){
+			   (Math.Abs(this.Configuration.SampleRates[0].SamplingFrequency) < 0.01d)){
 				//use timestamps in samples
-				for(int i=0;i<this.Data.samples.Length;i++){
-					list[i]=this.Data.samples[i].Timestamp*this.Configuration.TimeMultiplicationFactor;
+				for(int i=0;i<this.Data.Samples.Length;i++){
+					list[i]=this.Data.Samples[i].Timestamp*this.Configuration.TimeMultiplicationFactor;
 				}
 			}
 			else{//use calculated by samplingFrequency
 				double currentTime=0;
 				int sampleRateIndex=0;
 				const double secondToNanoSecond=1000000000;
-				for(int i=0;i<this.Data.samples.Length;i++){
+				for(int i=0;i<this.Data.Samples.Length;i++){
 					list[i]=currentTime;
-					if(i>=this.Configuration.SampleRates[sampleRateIndex].lastSampleNumber){
+					if(i>=this.Configuration.SampleRates[sampleRateIndex].LastSampleNumber){
 						sampleRateIndex++;
 					}				
 					
-					currentTime+=secondToNanoSecond/this.Configuration.SampleRates[sampleRateIndex].samplingFrequency;					
+					currentTime+=secondToNanoSecond/this.Configuration.SampleRates[sampleRateIndex].SamplingFrequency;					
 				} 
 			}			
 			return list;
@@ -224,9 +224,9 @@ namespace Wisp.Comtrade
 					this.Configuration.AnalogChannelInformationList[channelNumber].Secondary;
 			}
 			
-			var list=new double[this.Data.samples.Length];
-			for(int i=0;i<this.Data.samples.Length;i++){				
-				list[i]=(this.Data.samples[i].AnalogValues[channelNumber]*this.Configuration.AnalogChannelInformationList[channelNumber].MultiplierA+
+			var list=new double[this.Data.Samples.Length];
+			for(int i=0;i<this.Data.Samples.Length;i++){				
+				list[i]=(this.Data.Samples[i].AnalogValues[channelNumber]*this.Configuration.AnalogChannelInformationList[channelNumber].MultiplierA+
 				         this.Configuration.AnalogChannelInformationList[channelNumber].MultiplierB)*Kt;
 			}
 			return list;
@@ -237,9 +237,9 @@ namespace Wisp.Comtrade
 		/// </summary>
 		public IReadOnlyList<bool> GetDigitalChannel(int channelNumber)
 		{
-			var list=new bool[this.Data.samples.Length];
-			for(int i=0;i<this.Data.samples.Length;i++){
-				list[i]=this.Data.samples[i].DigitalValues[channelNumber];
+			var list=new bool[this.Data.Samples.Length];
+			for(int i=0;i<this.Data.Samples.Length;i++){
+				list[i]=this.Data.Samples[i].DigitalValues[channelNumber];
 			}
 			return list;
 		}		
