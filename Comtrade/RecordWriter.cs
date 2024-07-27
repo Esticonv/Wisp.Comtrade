@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace Wisp.Comtrade
 {
-	/// <summary>
-	/// For creating COMTRADE files
-	/// </summary>
-	public class RecordWriter
+    /// <summary>
+    /// For creating COMTRADE files
+    /// </summary>
+    public class RecordWriter
 	{
 		/// <summary>
 		/// Hz

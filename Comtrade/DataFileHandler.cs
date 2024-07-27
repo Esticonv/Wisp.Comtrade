@@ -3,10 +3,10 @@ using System.Linq;
 
 namespace Wisp.Comtrade
 {
-	/// <summary>
-	/// Description of DataFileHandler.
-	/// </summary>
-	internal class DataFileHandler
+    /// <summary>
+    /// Description of DataFileHandler.
+    /// </summary>
+    internal class DataFileHandler
 	{
 		internal DataFileSample[] samples;
 		
