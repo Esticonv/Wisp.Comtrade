@@ -68,23 +68,48 @@ namespace Wisp.Comtrade
 		{			
 			string path=System.IO.Path.GetDirectoryName(fullPathToFile);
 			string filenameWithoutExtention=System.IO.Path.GetFileNameWithoutExtension(fullPathToFile);
-			string extention=System.IO.Path.GetExtension(fullPathToFile).ToLower();			
+			string extention=System.IO.Path.GetExtension(fullPathToFile).ToLower();
+			string fullpathWithoutExtention = System.IO.Path.Combine(path, filenameWithoutExtention);
 
-			if(extention==GlobalSettings.ExtensionCFF){
-				using var cffFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtensionCFF, System.IO.FileMode.Open);
+            if (extention==GlobalSettings.ExtensionCFF){
+				var fullpath = GetFullPathCaseInsensitive(fullpathWithoutExtention, GlobalSettings.ExtensionCFF);
+                using var cffFileStream = new System.IO.FileStream(fullpath, System.IO.FileMode.Open);
 				this.OpenFromStreamCFF(cffFileStream);
 			}
 			else if(extention==GlobalSettings.ExtensionCFG || extention==GlobalSettings.ExtensionDAT){
-				using var cfgFileStream= new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtensionCFG, System.IO.FileMode.Open);
+                var fullpath = GetFullPathCaseInsensitive(fullpathWithoutExtention, GlobalSettings.ExtensionCFG);
+                using var cfgFileStream= new System.IO.FileStream(fullpath, System.IO.FileMode.Open);
 				this.OpenFromStreamCFG(cfgFileStream);
 
-				using var datFileStream = new System.IO.FileStream(System.IO.Path.Combine(path, filenameWithoutExtention) + GlobalSettings.ExtensionDAT, System.IO.FileMode.Open);
+                fullpath = GetFullPathCaseInsensitive(fullpathWithoutExtention, GlobalSettings.ExtensionDAT);
+                using var datFileStream = new System.IO.FileStream(fullpath, System.IO.FileMode.Open);
 				this.OpenFromStreamDAT(datFileStream);
 			}
 			else{
 				throw new InvalidOperationException("Unsupported file extentions. Must be *.cfg, *.dat, *.cff");
 			}			
 		}
+
+		/// <summary>
+		/// In not Windows system file case-sensitive
+		/// Trying find file in case-insensitive way
+		/// </summary>
+		/// <exception cref="InvalidOperationException">File not found</exception>
+		private static string GetFullPathCaseInsensitive(string fullpathWithoutExtention, string extention)
+		{
+			if (System.IO.File.Exists(fullpathWithoutExtention + extention)) 
+			{
+				return fullpathWithoutExtention + extention;
+			}
+			else if(System.IO.File.Exists(fullpathWithoutExtention + extention.ToUpperInvariant())) 
+			{
+				return fullpathWithoutExtention + extention.ToUpperInvariant();
+            }
+            else
+			{
+				throw new InvalidOperationException($"File not found: {fullpathWithoutExtention}{extention}");
+            }
+        }
 
 		internal void OpenFromStreamCFG(System.IO.Stream cfgStream)
         {
