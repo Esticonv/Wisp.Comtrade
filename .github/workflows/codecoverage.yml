@@ -1,0 +1,30 @@
+name: Unit Test With Coverage
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore   
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test  -p:CollectCoverage=true -p:CoverletOutputFormat=opencover --no-build --verbosity normal ComtradeTests/
+    - name: Create Test Coverage Badge
+      uses: simon-k/dotnet-code-coverage-badge@v1.0.0
+      id: create_coverage_badge
+      with:
+        label: Unit Test Coverage
+        color: brightgreen
+        path: ComtradeTests/coverage.opencover.xml
+        gist-filename: code-coverage.json
+        gist-id: 3ed6031e8dfea3e01c049747ecc85e55
+        gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}       
+    - name: Print code coverage
+      run: echo "Code coverage percentage ${{steps.create_coverage_badge.outputs.percentage}}%"
