@@ -22,19 +22,19 @@ public class RecordReaderTest
     }
 
     [Theory]
-    [InlineData("\\ExampleSet1\\", "sample_ascii.dat")]
-    [InlineData("\\ExampleSet1\\", "sample_bin.DAT")]
-    [InlineData("\\ExampleSet1\\", "sample_ascii.cFg")]
-    [InlineData("\\ExampleSet1\\", "sample_bin.cfg")]
+    [InlineData("ExampleSet1", "sample_ascii.dat")]
+    [InlineData("ExampleSet1", "sample_bin.DAT")]
+    [InlineData("ExampleSet1", "sample_ascii.cFg")]
+    [InlineData("ExampleSet1", "sample_bin.cfg")]
 
-    [InlineData("\\ExampleSet2\\", "1.dat")]
-    [InlineData("\\ExampleSet2\\", "2.DAT")]
-    [InlineData("\\ExampleSet2\\", "3.cFg")]
-    [InlineData("\\ExampleSet2\\", "4.cfg")]
-    [InlineData("\\ExampleSet2\\", "5.cfg")]
+    [InlineData("ExampleSet2", "1.dat")]
+    [InlineData("ExampleSet2", "2.dat")]
+    [InlineData("ExampleSet2", "3.cfg")]
+    [InlineData("ExampleSet2", "4.CFG")]
+    [InlineData("ExampleSet2", "5.cfg")]
     public void TestOpenFile(string path, string fileName)
-    {
-        var record = new RecordReader(_pathToPojectRoot + path + fileName);
+    {        
+        var record = new RecordReader(System.IO.Path.Combine(_pathToPojectRoot, path, fileName));
         record.GetTimeLine();
         record.GetAnalogPrimaryChannel(0);
         record.GetDigitalChannel(0);
