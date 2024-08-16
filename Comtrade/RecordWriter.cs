@@ -122,7 +122,7 @@ public class RecordWriter
         }
     }
 
-    private void SaveToStreamCFGSection(Stream stream, bool singleFile, DataFileType dataFileType)
+    public void SaveToStreamCFGSection(Stream stream, bool singleFile, DataFileType dataFileType)
     {
         CalculateScaleFactorAB(dataFileType);
 
